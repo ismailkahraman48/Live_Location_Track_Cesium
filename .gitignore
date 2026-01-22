@@ -1,0 +1,4 @@
+/ui/node_modules
+/ui/public
+/ui/.env*
+/api/__pycache__
