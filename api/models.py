@@ -44,6 +44,7 @@ class Bus(BaseModel):
     nextStop: Optional[str] = None
     status: BusStatus = BusStatus.IN_SERVICE
     progress: float = 0.0  # 0-1 progress along route
+    color: Optional[str] = None
 
 
 class BusListResponse(BaseModel):

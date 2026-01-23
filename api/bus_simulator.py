@@ -232,7 +232,8 @@ class BusSimulator:
             "next_stop": next_stop,
             "status": bus_data["status"],
             "progress": round(new_progress, 4),
-            "direction": "outbound" if bus_data["direction"] == 1 else "inbound"
+            "direction": "outbound" if bus_data["direction"] == 1 else "inbound",
+            "color": bus_data["color"]
         }
     
     def get_all_buses(self) -> List[Bus]:
@@ -252,7 +253,8 @@ class BusSimulator:
                 timestamp=datetime.now(timezone.utc),
                 nextStop=bus_state["next_stop"],
                 status=bus_state["status"],
-                progress=bus_state["progress"]
+                progress=bus_state["progress"],
+                color=bus_state["color"]
             ))
         
         return buses
@@ -275,7 +277,8 @@ class BusSimulator:
             timestamp=datetime.now(timezone.utc),
             nextStop=bus_state["next_stop"],
             status=bus_state["status"],
-            progress=bus_state["progress"]
+            progress=bus_state["progress"],
+            color=bus_state["color"]
         )
     
     def get_buses_by_route(self, route_code: str) -> List[Bus]:
@@ -296,7 +299,8 @@ class BusSimulator:
                     timestamp=datetime.now(timezone.utc),
                     nextStop=bus_state["next_stop"],
                     status=bus_state["status"],
-                    progress=bus_state["progress"]
+                    progress=bus_state["progress"],
+                    color=bus_state["color"]
                 ))
         
         return buses

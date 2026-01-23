@@ -61,7 +61,8 @@ def serialize_bus(bus) -> dict:
         "timestamp": bus.timestamp.isoformat(),
         "nextStop": bus.nextStop,
         "status": bus.status.value,
-        "progress": bus.progress
+        "progress": bus.progress,
+        "color": bus.color
     }
 
 
@@ -94,7 +95,7 @@ async def websocket_buses(websocket: WebSocket):
         
         # Continuous updates
         while True:
-            await asyncio.sleep(0.5)  # 500ms update interval for smooth animation
+            await asyncio.sleep(5) 
             
             buses = simulator.get_all_buses()
             await websocket.send_json({
