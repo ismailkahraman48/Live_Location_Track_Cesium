@@ -1,20 +1,21 @@
-import type { Viewer } from "cesium";
-import { createContext, useState, useContext } from "react";
+import type { Entity, Viewer } from "cesium";
+import { createContext, useState, useContext, useRef, type RefObject } from "react";
 
 
 interface CesiumContextType {
     viewer: Viewer | null;
     setViewer: (viewer: Viewer | null) => void;
+    busEntities: RefObject<Map<string, Entity>>;
 }
 
 export const CesiumContext = createContext<CesiumContextType | null>(null);
 
 export const CesiumProvider = ({ children }: { children: React.ReactNode }) => {
     const [viewer, setViewer] = useState<Viewer | null>(null);
-
+    const busEntities = useRef<Map<string, Entity>>(new Map());
     return (
 
-        <CesiumContext.Provider value={{ viewer, setViewer }}>
+        <CesiumContext.Provider value={{ viewer, setViewer, busEntities }}>
             {children}
         </CesiumContext.Provider>
     )
