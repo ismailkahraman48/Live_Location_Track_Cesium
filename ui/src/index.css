@@ -9,4 +9,9 @@ body,
   margin: 0;
   padding: 0;
   overflow: hidden;
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
