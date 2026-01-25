@@ -95,7 +95,7 @@ async def websocket_buses(websocket: WebSocket):
         
         # Continuous updates
         while True:
-            await asyncio.sleep(5) 
+            await asyncio.sleep(2) 
             
             buses = simulator.get_all_buses()
             await websocket.send_json({
@@ -133,7 +133,7 @@ async def websocket_buses_by_route(websocket: WebSocket, route_code: str):
         
         # Continuous updates
         while True:
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(2)
             
             buses = simulator.get_buses_by_route(route_code.upper())
             await websocket.send_json({

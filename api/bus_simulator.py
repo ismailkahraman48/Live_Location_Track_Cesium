@@ -129,15 +129,11 @@ class BusSimulator:
         heading = self._calculate_heading(coordinates[-2], coordinates[-1])
         return coordinates[-1][0], coordinates[-1][1], heading, len(coordinates) - 2
     
-    def _find_next_stop(self, bus_data: dict, current_position: tuple) -> Optional[str]:
-        """Find the next stop based on current position and direction"""
+    def _find_next_stop(self, bus_data: dict, current_position: tuple, current_heading: float) -> Optional[str]:
+        """Find the next stop based on current position and heading"""
         stops = bus_data["stops"]
-        coordinates = bus_data["coordinates"]
-        direction = bus_data["direction"]
-        
         current_lon, current_lat = current_position[0], current_position[1]
         
-        # Find closest stop ahead
         min_distance = float('inf')
         next_stop = None
         
@@ -145,24 +141,34 @@ class BusSimulator:
             stop_lon = stop["position"]["longitude"]
             stop_lat = stop["position"]["latitude"]
             
+            # Calculate distance
             distance = self._calculate_distance(
                 [current_lon, current_lat],
                 [stop_lon, stop_lat]
             )
             
-            # Check if stop is ahead based on direction
-            if direction == 1:
-                # Going forward
-                if stop_lat > current_lat and distance < min_distance:
-                    min_distance = distance
-                    next_stop = stop["name"]
-            else:
-                # Going backward
-                if stop_lat < current_lat and distance < min_distance:
-                    min_distance = distance
-                    next_stop = stop["name"]
+            # Calculate bearing to stop
+            bearing_to_stop = self._calculate_heading(
+                [current_lon, current_lat],
+                [stop_lon, stop_lat]
+            )
+            
+            # Calculate angle difference
+            angle_diff = abs(bearing_to_stop - current_heading)
+            if angle_diff > 180:
+                angle_diff = 360 - angle_diff
+                
+            # If the stop is "ahead" (within 90 degrees cone) and is the closest one
+            if angle_diff < 90 and distance < min_distance:
+                min_distance = distance
+                next_stop = stop["name"]
         
-        return next_stop or stops[-1 if direction == 1 else 0]["name"]
+        # Fallback to the last stop in the list if no "ahead" stop found (e.g. very close to end)
+        if not next_stop and stops:
+             next_stop = stops[-1]["name"] if bus_data["direction"] == 1 else stops[0]["name"]
+
+        return next_stop
+
     
     def _update_bus_position(self, bus_id: str, current_time: float) -> dict:
         """Update a single bus position based on elapsed time"""
@@ -208,7 +214,7 @@ class BusSimulator:
             heading = (heading + 180) % 360
         
         # Find next stop
-        next_stop = self._find_next_stop(bus_data, (lon, lat))
+        next_stop = self._find_next_stop(bus_data, (lon, lat), heading)
         
         # Simulate occasional stops
         if hash(str(current_time)[:5] + bus_id) % 20 == 0:
@@ -231,7 +237,7 @@ class BusSimulator:
             "speed": round(bus_data["current_speed"], 1),
             "next_stop": next_stop,
             "status": bus_data["status"],
-            "progress": round(new_progress, 4),
+            "progress": round(new_progress if bus_data["direction"] == 1 else (1.0 - new_progress), 4),
             "direction": "outbound" if bus_data["direction"] == 1 else "inbound",
             "color": bus_data["color"]
         }
