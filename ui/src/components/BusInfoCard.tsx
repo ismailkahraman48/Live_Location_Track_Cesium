@@ -1,11 +1,16 @@
 import React from 'react';
+import { useBusData } from "../context/BusData";
 
 interface BusInfoCardProps {
     bus: any;
     onClose: () => void;
 }
 
-const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus, onClose }) => {
+const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) => {
+    const { buses } = useBusData();
+
+    const bus = buses.find(b => b.id === initialBus?.id) || initialBus;
+
     if (!bus) return null;
 
     const rawProgress = typeof bus.progress === 'number' ? bus.progress : parseFloat(bus.progress) || 0;

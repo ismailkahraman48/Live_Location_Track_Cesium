@@ -14,27 +14,35 @@ import {
     HeadingPitchRoll,
     Transforms,
     SampledProperty,
-    Quaternion,
+    ScreenSpaceEventHandler,
+    ScreenSpaceEventType,
+    defined,
     LinearApproximation,
+    Quaternion,
     TimeInterval,
 } from "cesium"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useCesium } from "../context/Cesium"
 import { useBusData } from "../context/BusData"
 import ClientLocator from "./ClientLocator"
+import BusInfoCard from "./BusInfoCard"
 
 const CesiumViewer: React.FC = () => {
     const cesiumContainerRef = useRef<HTMLDivElement>(null)
     const viewerRef = useRef<Viewer | null>(null)
+    const [selectedBus, setSelectedBus] = useState<any>(null);
 
     const isClockInitialized = useRef(false);
 
     const { setViewer, busEntities } = useCesium();
 
-
-
-
     const { buses, isConnected } = useBusData();
+
+
+    const busesRef = useRef(buses);
+    useEffect(() => {
+        busesRef.current = buses;
+    }, [buses]);
 
     const addOSMBuildings = async (cesiumView: Viewer) => {
         const osmBuildings = await createOsmBuildingsAsync()
@@ -58,7 +66,7 @@ const CesiumViewer: React.FC = () => {
                     homeButton: false,
                     infoBox: false,
                     sceneModePicker: false,
-                    selectionIndicator: false,
+                    selectionIndicator: true,
                     navigationHelpButton: false,
                     navigationInstructionsInitiallyVisible: false,
                     requestRenderMode: false,
@@ -84,6 +92,26 @@ const CesiumViewer: React.FC = () => {
                 });
 
                 viewerRef.current = cesiumView;
+
+                // Handle clicks for checking/unchecking buses
+                // defined once on mount, uses ref to access latest state
+                const handler = new ScreenSpaceEventHandler(cesiumView.scene.canvas);
+                handler.setInputAction((movement: any) => {
+                    const pickedObject = cesiumView.scene.pick(movement.position);
+
+                    if (defined(pickedObject) && pickedObject.id) {
+                        const entityId = pickedObject.id.id;
+                        // Use ref to get latest buses without re-running effect
+                        const busData = busesRef.current.find(b => b.id === entityId);
+
+                        if (busData) {
+                            setSelectedBus(busData);
+                        }
+                    } else {
+                        setSelectedBus(null);
+                    }
+                }, ScreenSpaceEventType.LEFT_CLICK);
+
                 setViewer(cesiumView);
 
             } catch (error) {
@@ -93,12 +121,17 @@ const CesiumViewer: React.FC = () => {
 
         return () => {
             if (viewerRef.current && !viewerRef.current.isDestroyed()) {
+                // Destroy handler if possible, though destroying viewer does it too usually.
+                // But good practice to be explicit if we treated it separately.
+                // Since handler is attached to scene.canvas, destroying viewer is enough.
                 viewerRef.current.destroy();
                 viewerRef.current = null;
                 setViewer(null);
             }
         }
     }, [])
+
+
 
 
     useEffect(() => {
@@ -112,7 +145,7 @@ const CesiumViewer: React.FC = () => {
         if (!isClockInitialized.current) {
             const latestBusTimestamp = buses[0].timestamp;
             const now = JulianDate.fromIso8601(latestBusTimestamp);
-            const delayedTime = JulianDate.addSeconds(now, -10, new JulianDate());
+            const delayedTime = JulianDate.addSeconds(now, -5, new JulianDate());
 
             viewer.clock.currentTime = delayedTime;
             viewer.clock.shouldAnimate = true;
@@ -157,9 +190,10 @@ const CesiumViewer: React.FC = () => {
                     id: bus.id,
                     position: positionProperty,
                     orientation: orientationProperty,
+                    name: `Bus ${bus.id}`,
                     model: {
-                        uri: "/otobus.glb",
-                        scale: 1.0,
+                        uri: "/bus.glb",
+                        scale: 0.2,
                         minimumPixelSize: 64,
                         heightReference: HeightReference.CLAMP_TO_GROUND,
                         color: Color.fromCssColorString(routeColor).withAlpha(1)
@@ -176,6 +210,7 @@ const CesiumViewer: React.FC = () => {
                         heightReference: HeightReference.CLAMP_TO_GROUND,
                         disableDepthTestDistance: Number.POSITIVE_INFINITY
                     }
+
                 });
 
                 currentEntities.set(bus.id, entity);
@@ -208,10 +243,29 @@ const CesiumViewer: React.FC = () => {
 
 
 
+
+
+    // // Helper for focusing camera
+    // const handleFocus = (bus: any) => {
+    //     if (!viewerRef.current || !bus) return;
+
+    //     const entity = busEntities.current.get(bus.id);
+    //     if (entity) {
+    //         viewerRef.current.flyTo(entity, {
+    //             offset: new HeadingPitchRange(0, CesiumMath.toRadians(-45), 500)
+    //         });
+    //     }
+    // };
+
     return (
         <div className="w-full h-full relative">
             <div ref={cesiumContainerRef} className="w-full h-full" />
             <ClientLocator />
+            <BusInfoCard
+                bus={selectedBus}
+                onClose={() => setSelectedBus(null)}
+            // onFocus={handleFocus}
+            />
         </div>
     )
 }
