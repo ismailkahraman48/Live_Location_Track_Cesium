@@ -14,7 +14,6 @@ import {
     HeadingPitchRoll,
     Transforms,
     SampledProperty,
-    ScreenSpaceEventHandler,
     ScreenSpaceEventType,
     defined,
     LinearApproximation,
@@ -26,6 +25,7 @@ import { useCesium } from "../context/Cesium"
 import { useBusData } from "../context/BusData"
 import ClientLocator from "./ClientLocator"
 import BusInfoCard from "./BusInfoCard"
+import { useScreenSpaceEvent } from "../hooks/useScreenSpaceEvent"
 
 const CesiumViewer: React.FC = () => {
     const cesiumContainerRef = useRef<HTMLDivElement>(null)
@@ -93,24 +93,6 @@ const CesiumViewer: React.FC = () => {
 
                 viewerRef.current = cesiumView;
 
-                // Handle clicks for checking/unchecking buses
-                // defined once on mount, uses ref to access latest state
-                const handler = new ScreenSpaceEventHandler(cesiumView.scene.canvas);
-                handler.setInputAction((movement: any) => {
-                    const pickedObject = cesiumView.scene.pick(movement.position);
-
-                    if (defined(pickedObject) && pickedObject.id) {
-                        const entityId = pickedObject.id.id;
-                        // Use ref to get latest buses without re-running effect
-                        const busData = busesRef.current.find(b => b.id === entityId);
-
-                        if (busData) {
-                            setSelectedBus(busData);
-                        }
-                    } else {
-                        setSelectedBus(null);
-                    }
-                }, ScreenSpaceEventType.LEFT_CLICK);
 
                 setViewer(cesiumView);
 
@@ -121,15 +103,38 @@ const CesiumViewer: React.FC = () => {
 
         return () => {
             if (viewerRef.current && !viewerRef.current.isDestroyed()) {
-                // Destroy handler if possible, though destroying viewer does it too usually.
-                // But good practice to be explicit if we treated it separately.
-                // Since handler is attached to scene.canvas, destroying viewer is enough.
                 viewerRef.current.destroy();
                 viewerRef.current = null;
                 setViewer(null);
             }
         }
     }, [])
+
+
+
+    useScreenSpaceEvent(
+        viewerRef.current,
+        ScreenSpaceEventType.LEFT_CLICK,
+        (movement: any) => {
+            const viewer = viewerRef.current;
+            if (!viewer) return;
+
+            const pickedObject = viewer.scene.pick(movement.position);
+
+            if (defined(pickedObject) && pickedObject.id) {
+                const entityId = pickedObject.id.id;
+                const busData = busEntities.current.get(entityId);
+
+                if (busData) {
+                    setSelectedBus(busData);
+                }
+            } else {
+                setSelectedBus(null);
+            }
+        }
+    );
+
+
 
 
 
@@ -193,7 +198,7 @@ const CesiumViewer: React.FC = () => {
                     name: `Bus ${bus.id}`,
                     model: {
                         uri: "/bus.glb",
-                        scale: 0.2,
+                        scale: 0.5,
                         minimumPixelSize: 64,
                         heightReference: HeightReference.CLAMP_TO_GROUND,
                         color: Color.fromCssColorString(routeColor).withAlpha(1)
@@ -231,7 +236,6 @@ const CesiumViewer: React.FC = () => {
             }
         });
 
-        // Temizlik
         currentEntities.forEach((entity, id) => {
             if (!activeBusIds.has(id)) {
                 viewer.entities.remove(entity);
@@ -244,19 +248,6 @@ const CesiumViewer: React.FC = () => {
 
 
 
-
-    // // Helper for focusing camera
-    // const handleFocus = (bus: any) => {
-    //     if (!viewerRef.current || !bus) return;
-
-    //     const entity = busEntities.current.get(bus.id);
-    //     if (entity) {
-    //         viewerRef.current.flyTo(entity, {
-    //             offset: new HeadingPitchRange(0, CesiumMath.toRadians(-45), 500)
-    //         });
-    //     }
-    // };
-
     return (
         <div className="w-full h-full relative">
             <div ref={cesiumContainerRef} className="w-full h-full" />
@@ -264,7 +255,6 @@ const CesiumViewer: React.FC = () => {
             <BusInfoCard
                 bus={selectedBus}
                 onClose={() => setSelectedBus(null)}
-            // onFocus={handleFocus}
             />
         </div>
     )
