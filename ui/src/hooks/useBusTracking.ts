@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BusPosition, BusUpdateMessage } from "../types/bus";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export const useBusTracking = (routeCode?: string) => {
     const [buses, setBuses] = useState<Map<string, BusPosition>>(new Map());
@@ -23,11 +24,11 @@ export const useBusTracking = (routeCode?: string) => {
             clearTimeout(reconnectTimeoutRef.current);
         }
 
-        const baseUrl = `ws://127.0.0.1:8080/ws/buses`;
-        const socketUrl = routeCode ? `${baseUrl}/${routeCode}` : baseUrl;
+        const socketUrl = getApiUrl("/ws/buses");
+        const socketUrlWithRoute = routeCode ? `${socketUrl}/${routeCode}` : socketUrl;
 
         try {
-            const ws = new WebSocket(socketUrl);
+            const ws = new WebSocket(socketUrlWithRoute);
             wsRef.current = ws;
 
             ws.onopen = () => {

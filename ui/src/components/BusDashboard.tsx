@@ -8,6 +8,7 @@ import {
     Color,
     ConstantProperty,
 } from "cesium";
+import { getApiUrl } from "../utils/getApiUrl";
 
 const BusDashboard = () => {
     const { busCount, isConnected, routeFilter, setRouteFilter } = useBusData();
@@ -17,7 +18,7 @@ const BusDashboard = () => {
     const { viewer } = useCesium();
     const routeDataSourceRef = useRef<DataSource | null>(null);
 
-    const ROUTES_API_URL = "http://localhost:8080/routes/codes";
+    const ROUTES_API_URL = getApiUrl("/routes/codes");
 
     useEffect(() => {
         const fetchRouteCodes = async () => {
@@ -54,7 +55,7 @@ const BusDashboard = () => {
             if (!routeFilter) return;
 
             try {
-                const response = await fetch(`http://localhost:8080/routes/${routeFilter}/coordinates`);
+                const response = await fetch(getApiUrl(`/routes/${routeFilter}/coordinates`));
                 if (!response.ok) {
                     console.warn("Rota verisi bulunamadı:", routeFilter);
                     return;
