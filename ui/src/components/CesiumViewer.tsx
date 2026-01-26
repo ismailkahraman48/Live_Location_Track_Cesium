@@ -6,19 +6,9 @@ import {
     createOsmBuildingsAsync,
     Cartesian3,
     Math as CesiumMath,
-    JulianDate,
-    SampledPositionProperty,
-    ExtrapolationType,
-    Color,
-    HeightReference,
-    HeadingPitchRoll,
-    Transforms,
-    SampledProperty,
     ScreenSpaceEventType,
     defined,
-    LinearApproximation,
-    Quaternion,
-    TimeInterval,
+    Entity,
 } from "cesium"
 import { useEffect, useRef, useState } from "react"
 import { useCesium } from "../context/Cesium"
@@ -26,23 +16,17 @@ import { useBusData } from "../context/BusData"
 import ClientLocator from "./ClientLocator"
 import BusInfoCard from "./BusInfoCard"
 import { useScreenSpaceEvent } from "../hooks/useScreenSpaceEvent"
+import BusLayer from "./BusLayer"
 
 const CesiumViewer: React.FC = () => {
     const cesiumContainerRef = useRef<HTMLDivElement>(null)
     const viewerRef = useRef<Viewer | null>(null)
     const [selectedBus, setSelectedBus] = useState<any>(null);
 
-    const isClockInitialized = useRef(false);
-
     const { setViewer, busEntities } = useCesium();
+    const { buses } = useBusData();
 
-    const { buses, isConnected } = useBusData();
 
-
-    const busesRef = useRef(buses);
-    useEffect(() => {
-        busesRef.current = buses;
-    }, [buses]);
 
     const addOSMBuildings = async (cesiumView: Viewer) => {
         const osmBuildings = await createOsmBuildingsAsync()
@@ -92,8 +76,6 @@ const CesiumViewer: React.FC = () => {
                 });
 
                 viewerRef.current = cesiumView;
-
-
                 setViewer(cesiumView);
 
             } catch (error) {
@@ -111,7 +93,7 @@ const CesiumViewer: React.FC = () => {
     }, [])
 
 
-
+    // BUS INFO CARD EVENT
     useScreenSpaceEvent(
         viewerRef.current,
         ScreenSpaceEventType.LEFT_CLICK,
@@ -121,12 +103,12 @@ const CesiumViewer: React.FC = () => {
 
             const pickedObject = viewer.scene.pick(movement.position);
 
-            if (defined(pickedObject) && pickedObject.id) {
+            if (defined(pickedObject) && pickedObject.id instanceof Entity) {
                 const entityId = pickedObject.id.id;
-                const busData = busEntities.current.get(entityId);
 
-                if (busData) {
-                    setSelectedBus(busData);
+                if (busEntities.current.has(entityId)) {
+                    const fullBusData = buses.find(b => b.id === entityId);
+                    setSelectedBus(fullBusData || null);
                 }
             } else {
                 setSelectedBus(null);
@@ -134,123 +116,10 @@ const CesiumViewer: React.FC = () => {
         }
     );
 
-
-
-
-
-
-    useEffect(() => {
-        const viewer = viewerRef.current;
-        if (!viewer || !isConnected || buses.length === 0) return;
-
-        const currentEntities = busEntities.current;
-        const activeBusIds = new Set<string>();
-
-
-        if (!isClockInitialized.current) {
-            const latestBusTimestamp = buses[0].timestamp;
-            const now = JulianDate.fromIso8601(latestBusTimestamp);
-            const delayedTime = JulianDate.addSeconds(now, -5, new JulianDate());
-
-            viewer.clock.currentTime = delayedTime;
-            viewer.clock.shouldAnimate = true;
-            isClockInitialized.current = true;
-        }
-
-        buses.forEach((bus) => {
-            activeBusIds.add(bus.id);
-
-            const time = JulianDate.fromIso8601(bus.timestamp);
-
-            const position = Cartesian3.fromDegrees(
-                bus.position.longitude,
-                bus.position.latitude,
-                bus.position.altitude
-            );
-
-            const headingRadians = CesiumMath.toRadians(bus.heading - 90);
-            const hpr = new HeadingPitchRoll(headingRadians, 0, 0);
-            const orientation = Transforms.headingPitchRollQuaternion(position, hpr);
-
-            let entity = currentEntities.get(bus.id);
-
-            if (!entity) {
-
-                const positionProperty = new SampledPositionProperty();
-                positionProperty.forwardExtrapolationType = ExtrapolationType.HOLD;
-
-                positionProperty.setInterpolationOptions({
-                    interpolationDegree: 1,
-                    interpolationAlgorithm: LinearApproximation
-                });
-                positionProperty.addSample(time, position);
-
-                const orientationProperty = new SampledProperty(Quaternion);
-                orientationProperty.forwardExtrapolationType = ExtrapolationType.HOLD;
-                orientationProperty.addSample(time, orientation);
-
-                const routeColor = bus.color || "#FFFFFF";
-
-                entity = viewer.entities.add({
-                    id: bus.id,
-                    position: positionProperty,
-                    orientation: orientationProperty,
-                    name: `Bus ${bus.id}`,
-                    model: {
-                        uri: "/bus.glb",
-                        scale: 0.5,
-                        minimumPixelSize: 64,
-                        heightReference: HeightReference.CLAMP_TO_GROUND,
-                        color: Color.fromCssColorString(routeColor).withAlpha(1)
-                    },
-                    label: {
-                        text: `${bus.routeCode}`,
-                        font: "14px sans-serif",
-                        style: 1,
-                        fillColor: Color.WHITE,
-                        outlineColor: Color.BLACK,
-                        outlineWidth: 2,
-                        verticalOrigin: 1,
-                        pixelOffset: new Cartesian3(0, -20, 0),
-                        heightReference: HeightReference.CLAMP_TO_GROUND,
-                        disableDepthTestDistance: Number.POSITIVE_INFINITY
-                    }
-
-                });
-
-                currentEntities.set(bus.id, entity);
-            } else {
-                const removeTime = JulianDate.addSeconds(time, -60, new JulianDate());
-                const removeInterval = new TimeInterval({
-                    start: new JulianDate(0, 0),
-                    stop: removeTime
-                });
-
-                const positionProp = entity.position as SampledPositionProperty;
-                positionProp.addSample(time, position);
-                positionProp.removeSamples(removeInterval);
-
-                const orientationProp = entity.orientation as SampledProperty;
-                orientationProp.addSample(time, orientation);
-                orientationProp.removeSamples(removeInterval);
-            }
-        });
-
-        currentEntities.forEach((entity, id) => {
-            if (!activeBusIds.has(id)) {
-                viewer.entities.remove(entity);
-                currentEntities.delete(id);
-            }
-        });
-
-    }, [buses, isConnected]);
-
-
-
-
     return (
         <div className="w-full h-full relative">
             <div ref={cesiumContainerRef} className="w-full h-full" />
+            <BusLayer />
             <ClientLocator />
             <BusInfoCard
                 bus={selectedBus}
