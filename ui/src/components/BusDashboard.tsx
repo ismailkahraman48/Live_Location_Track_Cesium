@@ -7,6 +7,20 @@ import {
     PolylineGlowMaterialProperty,
     Color,
     ConstantProperty,
+    Cartesian3,
+    LabelGraphics,
+    PointGraphics,
+    DistanceDisplayCondition,
+    VerticalOrigin,
+    HeadingPitchRange,
+    Math as CesiumMath,
+    HeightReference,
+    Cartographic,
+    NearFarScalar,
+    LabelStyle,
+    JulianDate,
+    ConstantPositionProperty,
+    Entity,
 } from "cesium";
 import { getApiUrl } from "../utils/getApiUrl";
 
@@ -16,7 +30,10 @@ const BusDashboard = () => {
     const [routeCodes, setRouteCodes] = useState<string[]>([]);
     const [isLoadingCodes, setIsLoadingCodes] = useState(false);
     const { viewer } = useCesium();
+
+    // Data Source Refs
     const routeDataSourceRef = useRef<DataSource | null>(null);
+    const stopsDataSourceRef = useRef<DataSource | null>(null);
 
     const ROUTES_API_URL = getApiUrl("/routes/codes");
 
@@ -40,34 +57,43 @@ const BusDashboard = () => {
     }, []);
 
 
-
-
-
     useEffect(() => {
         if (!viewer) return;
 
-        const loadRoute = async () => {
-
+        const cleanupDataSources = () => {
             if (routeDataSourceRef.current) {
                 viewer.dataSources.remove(routeDataSourceRef.current);
                 routeDataSourceRef.current = null;
             }
+            if (stopsDataSourceRef.current) {
+                viewer.dataSources.remove(stopsDataSourceRef.current);
+                stopsDataSourceRef.current = null;
+            }
+        };
+
+        const loadRouteAndStops = async () => {
+            cleanupDataSources();
+
             if (!routeFilter) return;
 
             try {
-                const response = await fetch(getApiUrl(`/routes/${routeFilter}/coordinates`));
-                if (!response.ok) {
-                    console.warn("Rota verisi bulunamadı:", routeFilter);
+                const [routeRes, stopsRes] = await Promise.all([
+                    fetch(getApiUrl(`/routes/${routeFilter}/coordinates`)),
+                    fetch(getApiUrl(`/routes/${routeFilter}/stops`))
+                ]);
+
+                if (!routeRes.ok) {
+                    console.warn(`Rota verisi alınamadı: ${routeFilter}`);
                     return;
-                };
+                }
 
-                const geoJson = await response.json();
-
-                const dataSource = await GeoJsonDataSource.load(geoJson, {
+                const routeGeoJson = await routeRes.json();
+                const routeDs = await GeoJsonDataSource.load(routeGeoJson, {
                     clampToGround: true
                 });
-                const entities = dataSource.entities.values;
-                for (const entity of entities) {
+
+                const routeEntities = routeDs.entities.values;
+                for (const entity of routeEntities) {
                     if (entity.polyline) {
                         entity.polyline.material = new PolylineGlowMaterialProperty({
                             glowPower: 0.2,
@@ -77,16 +103,81 @@ const BusDashboard = () => {
                         entity.polyline.clampToGround = new ConstantProperty(true);
                     }
                 }
+                await viewer.dataSources.add(routeDs);
+                routeDataSourceRef.current = routeDs;
 
-                await viewer.dataSources.add(dataSource);
-                routeDataSourceRef.current = dataSource;
+
+                if (stopsRes.ok) {
+                    const stopsGeoJson = await stopsRes.json();
+                    const stopsDs = await GeoJsonDataSource.load(stopsGeoJson);
+
+
+                    const stopEntities = stopsDs.entities.values;
+
+                    for (const entity of stopEntities) {
+                        if (entity.position) {
+                            const position = entity.position.getValue(JulianDate.now());
+                            if (position) {
+                                const carto = Cartographic.fromCartesian(position);
+
+
+                                entity.position = new ConstantPositionProperty(
+                                    Cartesian3.fromRadians(carto.longitude, carto.latitude, 50.0)
+                                );
+
+                                entity.billboard = undefined;
+
+
+                                entity.point = new PointGraphics({
+                                    color: Color.YELLOW,
+                                    pixelSize: 10,
+                                    outlineColor: Color.BLACK,
+                                    outlineWidth: 2,
+                                    heightReference: HeightReference.RELATIVE_TO_GROUND,
+                                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                                    scaleByDistance: new NearFarScalar(1.5e2, 1.5, 1.5e7, 0.5)
+                                });
+
+                                if (entity.properties && entity.properties.name) {
+                                    entity.label = new LabelGraphics({
+                                        text: entity.properties.name.getValue(),
+                                        font: "bold 14px sans-serif",
+                                        style: LabelStyle.FILL_AND_OUTLINE,
+                                        verticalOrigin: VerticalOrigin.BOTTOM,
+
+                                        fillColor: Color.WHITE,
+                                        outlineColor: Color.BLACK,
+                                        outlineWidth: 3,
+                                        heightReference: HeightReference.RELATIVE_TO_GROUND,
+                                        distanceDisplayCondition: new DistanceDisplayCondition(0, 5000), // Sadece 5km yaklaşınca göster
+                                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    await viewer.dataSources.add(stopsDs);
+                    stopsDataSourceRef.current = stopsDs;
+                }
+
+                viewer.flyTo(routeDs, {
+                    duration: 1.5,
+                    offset: new HeadingPitchRange(0, CesiumMath.toRadians(-45), 0)
+                });
 
             } catch (error) {
-                console.error("Rota yükleme hatası:", error);
+                console.error("Rota/Durak yükleme hatası:", error);
             }
         }
 
-        loadRoute();
+        loadRouteAndStops();
+
+        return () => {
+            cleanupDataSources();
+        };
 
     }, [routeFilter, viewer]);
 

@@ -89,3 +89,39 @@ async def get_route_coordinates(route_code: str):
             "color": route_data["color"]
         }
     }
+
+
+@router.get("/{route_code}/stops")
+async def get_route_stops(route_code: str):
+    """
+    Get stops for a route in GeoJSON FeatureCollection format.
+    Useful for map visualization.
+    """
+    route_data = get_route(route_code.upper())
+    
+    if not route_data:
+        raise HTTPException(
+            status_code=404, 
+            detail=f"Route {route_code} not found"
+        )
+    
+    features = []
+    
+    for stop in route_data["stops"]:
+        features.append({
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [stop["position"]["longitude"], stop["position"]["latitude"]]
+            },
+            "properties": {
+                "name": stop["name"],
+                "route_code": route_data["code"],
+                "type": "STOP"
+            }
+        })
+        
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    }
