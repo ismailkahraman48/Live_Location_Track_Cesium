@@ -12,6 +12,8 @@ import {
     SampledPositionProperty,
     ExtrapolationType,
     JulianDate,
+    CallbackProperty,
+    DistanceDisplayCondition,
     Math as CesiumMath
 } from "cesium";
 import { useCesium } from "../context/Cesium";
@@ -21,6 +23,9 @@ const BusLayer = () => {
     const { viewer, busEntities } = useCesium();
     const { buses, isConnected } = useBusData();
     const isClockInitialized = useRef(false);
+
+
+    const speedMap = useRef(new Map<string, number>());
 
     useEffect(() => {
         if (!viewer || !isConnected || buses.length === 0) return;
@@ -42,6 +47,7 @@ const BusLayer = () => {
 
         buses.forEach((bus) => {
             activeBusIds.add(bus.id);
+            speedMap.current.set(bus.id, bus.speed);
 
             // Julian Date from ISO8601 Timestamp 
             const time = JulianDate.fromIso8601(bus.timestamp);
@@ -89,22 +95,32 @@ const BusLayer = () => {
                         color: Color.fromCssColorString(routeColor).withAlpha(1)
                     },
                     label: {
-                        text: `${bus.routeCode}`,
-                        font: "14px sans-serif",
-                        style: 1,
-                        fillColor: Color.WHITE,
+                        text: new CallbackProperty(() => {
+                            const s = speedMap.current.get(bus.id) || 0;
+                            return `${bus.routeCode}\n${Math.round(s)} km/h`;
+                        }, false),
+                        font: "bold 14px monospace",
+                        style: 2,
+                        fillColor: new CallbackProperty(() => {
+                            const s = speedMap.current.get(bus.id) || 0;
+                            if (s < 15) return Color.RED;
+                            if (s < 30) return Color.ORANGE;
+                            if (s < 50) return Color.YELLOW;
+                            return Color.fromCssColorString("#00FF88");
+                        }, false),
                         outlineColor: Color.BLACK,
-                        outlineWidth: 2,
+                        outlineWidth: 4,
                         verticalOrigin: 1,
-                        pixelOffset: new Cartesian3(0, -20, 0),
+                        pixelOffset: new Cartesian3(0, -40, 0),
                         heightReference: HeightReference.CLAMP_TO_GROUND,
-                        disableDepthTestDistance: Number.POSITIVE_INFINITY
+                        disableDepthTestDistance: 1000,
+                        distanceDisplayCondition: new DistanceDisplayCondition(0, 5000)
                     }
                 });
 
                 currentEntities.set(bus.id, entity);
             }
-            // Update Bus Position and Orientation
+
             else {
                 const removeTime = JulianDate.addSeconds(time, -60, new JulianDate());
                 const removeInterval = new TimeInterval({

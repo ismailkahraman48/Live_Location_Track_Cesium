@@ -13,7 +13,6 @@ import {
 import { useEffect, useRef, useState } from "react"
 import { useCesium } from "../context/Cesium"
 import { useBusData } from "../context/BusData"
-import ClientLocator from "./ClientLocator"
 import BusInfoCard from "./BusInfoCard"
 import { useScreenSpaceEvent } from "../hooks/useScreenSpaceEvent"
 import BusLayer from "./BusLayer"
@@ -120,7 +119,6 @@ const CesiumViewer: React.FC = () => {
         <div className="w-full h-full relative">
             <div ref={cesiumContainerRef} className="w-full h-full" />
             <BusLayer />
-            <ClientLocator />
             <BusInfoCard
                 bus={selectedBus}
                 onClose={() => setSelectedBus(null)}

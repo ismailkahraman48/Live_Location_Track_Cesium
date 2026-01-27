@@ -2,8 +2,10 @@
 import CesiumViewer from './components/CesiumViewer';
 import BusDashboard from './components/BusDashboard';
 import { BusDataProvider } from './context/BusData';
+
 import './index.css';
 import { CesiumProvider } from './context/Cesium';
+import ProjectInfo from './components/ProjectInfo';
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
       <CesiumProvider>
         <div className="w-full h-full relative">
           <BusDashboard />
+          <ProjectInfo />
           <CesiumViewer />
         </div>
       </CesiumProvider>

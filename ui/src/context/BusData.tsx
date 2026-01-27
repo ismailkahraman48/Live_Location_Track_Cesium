@@ -6,16 +6,19 @@ interface BusDataContextType {
     buses: BusPosition[];
     busesMap: Map<string, BusPosition>;
     isConnected: boolean;
+    error: string | null;
     routeFilter: string;
     setRouteFilter: (code: string) => void;
     busCount: number;
+    reconnect: () => void;
+    disconnect: () => void;
 }
 
 const BusDataContext = createContext<BusDataContextType | null>(null);
 
 export const BusDataProvider = ({ children }: { children: React.ReactNode }) => {
     const [routeFilter, setRouteFilter] = useState<string>("");
-    const { buses, busesMap, isConnected, busCount } = useBusTracking(routeFilter);
+    const { buses, busesMap, isConnected, busCount, error, reconnect, disconnect } = useBusTracking(routeFilter);
 
     const value = useMemo(() => ({
         buses,
@@ -23,8 +26,11 @@ export const BusDataProvider = ({ children }: { children: React.ReactNode }) => 
         isConnected,
         routeFilter,
         setRouteFilter,
-        busCount
-    }), [buses, busesMap, isConnected, routeFilter, busCount]);
+        busCount,
+        error,
+        reconnect,
+        disconnect
+    }), [buses, busesMap, isConnected, routeFilter, busCount, error, reconnect, disconnect]);
 
     return (
         <BusDataContext.Provider value={value}>

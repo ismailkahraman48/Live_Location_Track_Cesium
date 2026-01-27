@@ -65,7 +65,6 @@ export const useBusTracking = (routeCode?: string) => {
                 if (!isMountedRef.current) return;
                 setIsConnected(false);
 
-                // Reconnect unless normal close
                 if (event.code !== 1000) {
                     reconnectAttemptsRef.current += 1;
                     const attempts = reconnectAttemptsRef.current;
@@ -112,11 +111,19 @@ export const useBusTracking = (routeCode?: string) => {
         };
     }, [connectWebSocket]);
 
+    const disconnect = useCallback(() => {
+        if (wsRef.current) {
+            wsRef.current.close(1000, "User manual disconnect");
+        }
+    }, []);
+
     return {
         buses: Array.from(buses.values()),
         busesMap: buses,
         isConnected,
         error,
         busCount: buses.size,
+        reconnect: connectWebSocket,
+        disconnect
     };
 };

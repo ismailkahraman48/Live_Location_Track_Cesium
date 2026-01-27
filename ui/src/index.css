@@ -16,3 +16,7 @@ body,
     transform: translateX(100%);
   }
 }
+
+.cesium-viewer-bottom {
+  display: none !important;
+}
