@@ -2,13 +2,13 @@
 /ui/public
 /ui/.env*
 /api/__pycache__
+/api/routers/__pycache__
+/api/routes_data/__pycache__
+/api/venv
 
 # Python
-**/__pycache__
-api/routes_data/__pycache__
 *.py[cod]
 *$py.class
-
 
 
 

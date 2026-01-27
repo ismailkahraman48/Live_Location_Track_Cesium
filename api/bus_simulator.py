@@ -1,7 +1,4 @@
-"""
-Bus Simulator - Simulates bus movement along routes
-Provides real-time position updates with smooth interpolation
-"""
+
 import math
 import time
 from datetime import datetime, timezone

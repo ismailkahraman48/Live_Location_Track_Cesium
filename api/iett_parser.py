@@ -4,30 +4,15 @@ from urllib.request import Request, urlopen
 from typing import Dict, List, Any, Optional
 
 def fetch_and_parse_iett_data(route_code: str) -> Optional[Dict[str, Any]]:
-    """
-    IETT API'sindan verilen hat koduna (örn: '30D') gore
-    guzergah ve durak verilerini ceker ve projenin formatina cevirir.
-    Sorgu parametresi olarak otomatik '_D_D0' eklenir.
-
-    Args:
-        route_code (str): Hat kodu, örn: '30D'
-
-    Returns:
-        dict: Proje formatinda rota verisi
-    """
+   
     query_param = f"{route_code}_D_D0"
     url = f"https://iett.istanbul/tr/RouteStation/GetRoutePinV2?q={query_param}"
     
-    # IETT sunucusu bazi isteklere user-agent kontrolu yapabilir
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
-    
     try:
-        req = Request(url, headers=headers)
+        req = Request(url)
         with urlopen(req) as response:
             content = response.read()
-            # BOM karakteri varsa temizle
+            
             if content.startswith(b'\xef\xbb\xbf'):
                 content = content[3:]
             data = json.loads(content)
@@ -41,23 +26,20 @@ def fetch_and_parse_iett_data(route_code: str) -> Optional[Dict[str, Any]]:
         
     route_data = data[0]
     
-    # 1. LINESTRING Koordinatlarini Parse Et
-    # Format: "LINESTRING (lon lat, lon lat, ...)|LINESTRING (...)"
+    
     full_line_string = route_data.get("line", "")
     coordinates = []
     
     if full_line_string:
-        # Birden fazla LINESTRING olabilir, '|' ile ayrilmis
+        
         linestrings = full_line_string.split("|")
         
         for ls in linestrings:
-            # LINESTRING yazisini ve parantezleri temizle
+            
             clean_ls = re.sub(r"LINESTRING\s*\(|\)", "", ls)
-            # Koordinat ciftlerini ayir (virgul ile ayrilmis)
             points = clean_ls.split(",")
             
             for point in points:
-                # Boylam ve Enlemi ayir (bosluk ile ayrilmis)
                 coords = point.strip().split(" ")
                 if len(coords) >= 2:
                     try:
@@ -67,7 +49,6 @@ def fetch_and_parse_iett_data(route_code: str) -> Optional[Dict[str, Any]]:
                     except ValueError:
                         continue
     
-    # 2. Duraklari (Stops) Parse Et
     stations = route_data.get("stationPlaces", [])
     stops = []
     
@@ -84,19 +65,17 @@ def fetch_and_parse_iett_data(route_code: str) -> Optional[Dict[str, Any]]:
         except (ValueError, TypeError):
             continue
 
-    # Kod zaten parametre olarak geldi
     code = route_code
     
-    # API'den gelen veride renk basinda # ile gelmeyebilir veya farkli formatta olabilir, kontrol et
     color = route_data.get("lineColor", "#049ae5")
     if color and not color.startswith("#"):
         color = f"#{color}"
 
     result = {
         "code": code,
-        "name": f"{code} Hattı", # Isim API yanitinda dogrudan yok, varsayilan ataniyor
+        "name": f"{code} Hattı", 
         "color": color,
-        "bus_count": 0, # Varsayilan deger
+        "bus_count": 0, 
         "coordinates": coordinates,
         "stops": stops
     }

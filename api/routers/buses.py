@@ -14,10 +14,7 @@ router = APIRouter(prefix="/buses", tags=["buses"])
 async def get_all_buses(
     route_code: Optional[str] = Query(None, description="Filter by route code")
 ):
-    """
-    Get all buses or filter by route code.
-    Returns real-time positions of all active buses.
-    """
+    
     simulator = get_simulator()
     
     if route_code:
