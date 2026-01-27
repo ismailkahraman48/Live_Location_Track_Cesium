@@ -209,7 +209,7 @@ const BusDashboard = () => {
     };
 
     return (
-        <div className="absolute top-4 left-4 z-10 bg-black/80 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white min-w-[300px]">
+        <div className="absolute top-0 left-0 w-full md:w-auto md:top-4 md:left-4 z-10 bg-black/80 backdrop-blur-md p-4 md:rounded-xl border-b md:border border-white/10 text-white md:min-w-[300px]">
             <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
                 IETT Live Tracking
             </h2>

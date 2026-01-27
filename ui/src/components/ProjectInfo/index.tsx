@@ -28,8 +28,8 @@ const ProjectInfo: React.FC = () => {
     }
 
     return (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-slate-900/95 border border-slate-700 w-full max-w-4xl h-[80vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-slate-900/95 border-none md:border border-slate-700 w-full max-w-4xl h-full md:h-[80vh] rounded-none md:rounded-2xl shadow-2xl overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
                     <div>
@@ -51,9 +51,9 @@ const ProjectInfo: React.FC = () => {
                 </div>
 
                 {/* Main Content Layout */}
-                <div className="flex flex-1 overflow-hidden">
+                <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
                     {/* Sidebar / Tabs */}
-                    <div className="w-64 bg-slate-950/30 border-r border-slate-800 p-4 flex flex-col gap-2">
+                    <div className="w-full md:w-64 bg-slate-950/30 border-b md:border-b-0 md:border-r border-slate-800 p-2 md:p-4 flex flex-row md:flex-col gap-2 overflow-x-auto shrink-0 no-scrollbar">
                         <TabButton
                             active={activeTab === 'overview'}
                             onClick={() => setActiveTab('overview')}
@@ -75,7 +75,7 @@ const ProjectInfo: React.FC = () => {
                     </div>
 
                     {/* Content Area */}
-                    <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
+                    <div className="flex-1 p-4 md:p-8 overflow-y-auto custom-scrollbar">
                         {activeTab === 'overview' && <OverviewContent />}
                         {activeTab === 'architecture' && <ArchitectureContent />}
                         {activeTab === 'features' && <FeaturesContent />}
