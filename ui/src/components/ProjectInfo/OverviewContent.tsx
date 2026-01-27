@@ -3,28 +3,35 @@ import StatCard from './StatCard';
 
 const OverviewContent = () => (
     <div className="space-y-6 text-slate-300">
-        <h2 className="text-xl font-semibold text-white mb-4 border-b border-slate-700 pb-2">About The Project</h2>
-        <p>
-            This project is a high-performance Geographic Information System (GIS) application that visualizes
-            Istanbul public transport data in real-time on a 3D globe.
+        <h2 className="text-xl font-semibold text-white mb-4 border-b border-slate-700 pb-2">Smart City Vision</h2>
+
+        <p className="leading-relaxed">
+            This project is more than just a tracking system; it lays the foundation for a <strong>comprehensive Smart City Digital Twin</strong>.
+            In this demonstration, static route data is processed to <strong>simulate live vehicle locations</strong> with high fidelity, mimicking real-time telemetry.
+            In the future of urban management, cities will be pulsated by millions of sensor data points—from traffic flow and environmental monitoring to energy usage.
+            This infrastructure is engineered to ingest, visualize, and analyze massive scale IoT streams to make the entire city manageable from a single pane of glass.
         </p>
+
         <div className="grid grid-cols-2 gap-4 mt-6">
-            <StatCard label="Active Buses" value="1000+" color="bg-emerald-500/20 text-emerald-400" />
-            <StatCard label="Latency" value="&lt; 500ms" color="bg-blue-500/20 text-blue-400" />
-            <StatCard label="Data Source" value="IETT API" color="bg-yellow-500/20 text-yellow-400" />
-            <StatCard label="Technology" value="CesiumJS" color="bg-indigo-500/20 text-indigo-400" />
+            <StatCard label="Core Engine" value="CesiumJS 3D" color="bg-indigo-500/20 text-indigo-400" />
+            <StatCard label="Real-Time Proto" value="WebSocket / MQTT" color="bg-emerald-500/20 text-emerald-400" />
+            <StatCard label="Data Source" value="IoT Sensor Fusion" color="bg-blue-500/20 text-blue-400" />
+            <StatCard label="Backend" value="Python FastAPI" color="bg-yellow-500/20 text-yellow-400" />
         </div>
 
-        {/* Live Data Readiness Note */}
-        <div className="mt-6 bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
-            <h3 className="text-blue-400 font-semibold text-sm mb-2 flex items-center gap-2">
+        {/* Future Scalability Note */}
+        <div className="mt-6 bg-purple-500/10 border border-purple-500/20 p-4 rounded-lg">
+            <h3 className="text-purple-400 font-semibold text-sm mb-2 flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 01-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 01-.837.552c-.676.328-1.028.774-1.028 1.152v.202a.75.75 0 01-1.5 0v-.202c0-.944.606-1.657 1.336-2.008.237-.113.48-.246.69-.43 1.096-.96 1.096-2.52 0-3.48zM12 15.75a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008a.75.75 0 01.75-.75h.008z" clipRule="evenodd" />
+                    <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
+                    <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
                 </svg>
-                Production Ready Architecture
+                Future-Proof Infrastructure
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-                While this demo uses a high-fidelity simulator for consistent data presentation, the system core is engineered to ingest <strong>Real-Time GPS Telemetry</strong> (e.g., GTFS-Realtime, MQTT). The WebSocket architecture allows for seamless substitution of the simulator with a live IETT data stream without any frontend modifications.
+                While currently demonstrating public transport tracking, the architecture is agnostic to the data type.
+                It is ready to scale for <strong>emergency response coordination, utility grid monitoring, and autonomous vehicle telemetry</strong>,
+                turning raw city data into actionable intelligence.
             </p>
         </div>
     </div>

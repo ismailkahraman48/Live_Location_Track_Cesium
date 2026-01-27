@@ -42,6 +42,12 @@ const FeaturesContent = () => (
                     <div className="text-xs font-bold text-pink-200 mb-1">Historical Playback</div>
                     <p className="text-[11px] text-slate-400">Time-slider interface to replay bus movements from previous days (DVR capability).</p>
                 </div>
+                <div className="p-3 bg-white/5 rounded border border-white/10 md:col-span-2">
+                    <div className="text-xs font-bold text-cyan-200 mb-1">City-Wide Data Integration</div>
+                    <p className="text-[11px] text-slate-400">
+                        Expansion of the platform to aggregate multi-modal live data streams including Metro, Tram, Ferry lines, ESP (Parking) availability, and municipal IoT sensors for a holistic centralized city dashboard.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
