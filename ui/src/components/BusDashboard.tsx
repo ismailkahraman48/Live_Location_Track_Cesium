@@ -26,11 +26,12 @@ import { getApiUrl } from "../utils/getApiUrl";
 const BusDashboard = () => {
     const { busCount, isConnected, routeFilter, setRouteFilter } = useBusData();
     const [inputVal, setInputVal] = useState(routeFilter);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [routeCodes, setRouteCodes] = useState<string[]>([]);
     const [isLoadingCodes, setIsLoadingCodes] = useState(false);
     const { viewer } = useCesium();
 
-    // Data Source Refs
+
     const routeDataSourceRef = useRef<DataSource | null>(null);
     const stopsDataSourceRef = useRef<DataSource | null>(null);
 
@@ -208,6 +209,17 @@ const BusDashboard = () => {
         setFormError(null);
     };
 
+    const filteredCodes = routeCodes.filter(code =>
+        code.toLowerCase().includes(inputVal.toLowerCase())
+    );
+
+    const handleSelectRoute = (code: string) => {
+        setInputVal(code);
+        setRouteFilter(code);
+        setFormError(null);
+        setIsDropdownOpen(false);
+    };
+
     return (
         <div className="absolute top-0 left-0 w-full md:w-auto md:top-4 md:left-4 z-10 bg-black/80 backdrop-blur-md p-4 md:rounded-xl border-b md:border border-white/10 text-white md:min-w-[300px]">
             <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
@@ -224,23 +236,47 @@ const BusDashboard = () => {
 
             <form onSubmit={handleSearch} className="flex flex-col gap-2">
                 <div className="flex gap-2">
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 group">
                         <input
                             type="text"
                             value={inputVal}
+                            onClick={() => setIsDropdownOpen(true)}
+                            onFocus={() => setIsDropdownOpen(true)}
+                            onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
                             onChange={(e) => {
                                 setInputVal(e.target.value);
                                 setFormError(null);
+                                setIsDropdownOpen(true);
                             }}
                             placeholder="Route Code (e.g. 500T)"
-                            list="route-codes"
                             className={`w-full bg-white/5 border ${formError ? 'border-red-500/50' : 'border-white/10'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 transition-colors`}
                         />
-                        <datalist id="route-codes">
-                            {routeCodes.map((code) => (
-                                <option key={code} value={code} />
-                            ))}
-                        </datalist>
+
+                        {isDropdownOpen && routeCodes.length > 0 && (
+                            <div className="absolute top-full left-0 w-full mt-1 max-h-60 overflow-y-auto bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl z-50 custom-scrollbar">
+                                {filteredCodes.length > 0 ? (
+                                    filteredCodes.map((code) => (
+                                        <button
+                                            key={code}
+                                            type="button"
+                                            onMouseDown={(e) => {
+                                                e.preventDefault(); // Prevents blur before click
+                                                handleSelectRoute(code);
+                                            }}
+                                            className="w-full text-left px-3 py-2 hover:bg-white/10 text-sm text-gray-300 hover:text-white transition-colors border-b border-white/5 last:border-0 flex items-center justify-between group-item"
+                                        >
+                                            <span className="font-mono">{code}</span>
+                                            <svg className="w-3 h-3 opacity-0 group-item-hover:opacity-100 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    ))
+                                ) : (
+                                    <div className="px-3 py-2 text-xs text-gray-500 text-center">No routes found</div>
+                                )}
+                            </div>
+                        )}
+
                         {routeFilter && (
                             <button
                                 type="button"
