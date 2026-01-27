@@ -24,7 +24,7 @@ export const useBusTracking = (routeCode?: string) => {
             clearTimeout(reconnectTimeoutRef.current);
         }
 
-        const socketUrl = getApiUrl("/ws/buses");
+        const socketUrl = getApiUrl("/ws/buses").replace(/^http/, "ws");
         const socketUrlWithRoute = routeCode ? `${socketUrl}/${routeCode}` : socketUrl;
 
         try {

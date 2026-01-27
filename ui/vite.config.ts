@@ -8,5 +8,6 @@ export default defineConfig({
   plugins: [react(), cesium(), tailwindcss()],
   server: {
     host: true
-  }
+  },
+  base: "/Live_Location_Track_Cesium"
 })
