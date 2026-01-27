@@ -1,6 +1,5 @@
 import { useBusData } from "../../context/BusData";
 import TechItem from './TechItem';
-import ClassCard from './ClassCard';
 
 const ArchitectureContent = () => {
     const { isConnected, reconnect, disconnect } = useBusData();
