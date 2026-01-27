@@ -9,5 +9,5 @@ export default defineConfig({
   server: {
     host: true
   },
-  base: "/Live_Location_Track_Cesium"
+  base: "./"
 })
