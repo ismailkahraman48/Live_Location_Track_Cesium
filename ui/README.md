@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# IETT Live Tracking UI 🌍
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hey! This is the **frontend**, the showcase of the project.
 
-Currently, two official plugins are available:
+This is where users experience the 3D city and watch buses moving fluently across the map. I used CesiumJS to create a high-performance 3D world directly in the browser.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Highlights
+*   **CesiumJS Integration:** The map isn't just a flat background; it's a full 3D world with accurate terrain and depth.
+*   **Smooth Animations:** Even if data from the backend arrives in chunks (e.g., every 2 seconds), the code here uses **interpolation** to fill in the gaps. This ensures buses glide smoothly instead of jumping or teleporting.
+*   **Modern Interface:** I used React and TailwindCSS for the floating panels and buttons, ensuring it looks good on both mobile and desktop.
 
-## React Compiler
+### Tech Stack
+*   **React:** For managing UI components and state.
+*   **Vite:** For super-fast building and development.
+*   **CesiumJS:** The core 3D map engine.
+*   **TailwindCSS:** For all styling needs.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### How to Run
+Make sure the API is running, then open a new terminal:
 
-## Expanding the ESLint configuration
+```bash
+# Install dependencies
+npm install
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start the development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The app usually opens at `http://localhost:5173`. Enjoy the ride!
