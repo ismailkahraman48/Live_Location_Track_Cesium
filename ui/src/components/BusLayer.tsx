@@ -88,7 +88,7 @@ const BusLayer = () => {
                     orientation: orientationProperty,
                     name: `Bus ${bus.id}`,
                     model: {
-                        uri: "/bus.glb",
+                        uri: "bus.glb",
                         scale: 0.5,
                         minimumPixelSize: 64,
                         heightReference: HeightReference.CLAMP_TO_GROUND,
