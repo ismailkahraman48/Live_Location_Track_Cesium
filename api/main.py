@@ -1,6 +1,6 @@
 """
-IETT Live Bus Tracker - Fake GPS API
-FastAPI application for simulating live bus positions in Istanbul
+IETT Live Bus Tracker - Live API
+FastAPI application for live bus positions in Istanbul
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,23 +12,7 @@ from bus_simulator import get_simulator
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="IETT Live Bus Tracker - Fake GPS API",
-    description="""
-    Simulates real-time bus positions for 5 Istanbul bus routes.
-    
-    ## Features
-    - **12 buses** across **5 routes** moving in real-time
-    - REST API for polling bus/route data
-    - WebSocket for real-time updates (500ms intervals)
-    - Smooth position interpolation for 3D visualization
-    
-    ## Routes
-    - **34G**: Eminönü - Alibeyköy
-    - **500T**: Taksim - Topkapı
-    - **77A**: Kadıköy - Altunizade
-    - **DT1**: Mecidiyeköy - Taksim
-    - **30D**: Beyazıt - Edirnekapı
-    """,
+    title="IETT Live Bus Tracker API",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -55,9 +39,9 @@ async def root():
     simulator = get_simulator()
     
     return {
-        "name": "IETT Live Bus Tracker - Fake GPS API",
+        "name": "IETT Live Bus Tracker API",
         "version": "1.0.0",
-        "description": "Simulates real-time bus positions in Istanbul",
+        "description": "Real-time bus positions in Istanbul",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "stats": {
             "total_buses": len(simulator.get_bus_ids()),
