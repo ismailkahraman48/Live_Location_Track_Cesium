@@ -108,12 +108,11 @@ const BusLayer = () => {
                             if (s < 50) return Color.YELLOW;
                             return Color.fromCssColorString("#00FF88");
                         }, false),
-                        outlineColor: Color.BLACK,
-                        outlineWidth: 4,
+
                         verticalOrigin: 1,
                         pixelOffset: new Cartesian3(0, -40, 0),
                         heightReference: HeightReference.CLAMP_TO_GROUND,
-                        disableDepthTestDistance: 1000,
+                        disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         distanceDisplayCondition: new DistanceDisplayCondition(0, 5000)
                     }
                 });
