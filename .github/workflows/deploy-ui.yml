@@ -41,6 +41,7 @@ jobs:
       - name: Build
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_CESIUM_ION_TOKEN: ${{ secrets.VITE_CESIUM_ION_TOKEN }}
         run: npm run build
       
       - name: Setup Pages
