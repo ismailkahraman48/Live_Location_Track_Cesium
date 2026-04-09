@@ -12,6 +12,7 @@ export const CesiumContext = createContext<CesiumContextType | null>(null);
 
 export const CesiumProvider = ({ children }: { children: React.ReactNode }) => {
     const [viewer, setViewer] = useState<Viewer | null>(null);
+    console.log("🚀 ~ CesiumProvider ~ viewer:", viewer)
     const busEntities = useRef<Map<string, Entity>>(new Map());
     return (
 
