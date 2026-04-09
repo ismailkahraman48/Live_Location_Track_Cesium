@@ -9,6 +9,7 @@ import {
     ScreenSpaceEventType,
     defined,
     Entity,
+    Ion,
 } from "cesium"
 import { useEffect, useRef, useState } from "react"
 import { useCesium } from "../context/Cesium"
@@ -24,6 +25,9 @@ const CesiumViewer: React.FC = () => {
 
     const { setViewer, busEntities } = useCesium();
     const { buses } = useBusData();
+
+
+    Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_TOKEN || "";
 
 
 
