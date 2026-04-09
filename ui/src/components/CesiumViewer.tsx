@@ -28,7 +28,6 @@ const CesiumViewer: React.FC = () => {
 
 
     Ion.defaultAccessToken = import.meta.env.VITE_CESIUM_ION_TOKEN || "";
-    console.log("🚀 ~ CesiumViewer ~ Ion.defaultAccessToken:", Ion.defaultAccessToken)
 
 
     const addOSMBuildings = async (cesiumView: Viewer) => {
