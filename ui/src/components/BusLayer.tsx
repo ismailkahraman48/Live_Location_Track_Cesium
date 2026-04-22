@@ -7,7 +7,7 @@ import {
     Transforms,
     SampledProperty,
     Quaternion,
-    LinearApproximation,
+    HermitePolynomialApproximation,
     TimeInterval,
     SampledPositionProperty,
     ExtrapolationType,
@@ -71,8 +71,8 @@ const BusLayer = () => {
                 const positionProperty = new SampledPositionProperty();
                 positionProperty.forwardExtrapolationType = ExtrapolationType.HOLD;
                 positionProperty.setInterpolationOptions({
-                    interpolationDegree: 1,
-                    interpolationAlgorithm: LinearApproximation
+                    interpolationDegree: 2,
+                    interpolationAlgorithm: HermitePolynomialApproximation
                 });
                 positionProperty.addSample(time, position);
 
