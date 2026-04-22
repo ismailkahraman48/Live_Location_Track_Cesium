@@ -244,12 +244,17 @@ const BusDashboard = () => {
                 </button>
             </div>
 
-            <div className="flex items-center gap-2 mb-5 text-sm">
-                <div className={`w-2 h-2 ${isConnected ? "bg-gis-accent" : "bg-red-500"}`} />
-                <span className="text-gis-muted uppercase text-xs font-bold tracking-wider">
+            <div className="flex items-center gap-3 mb-5 text-sm">
+                <div className="relative">
+                    <div className={`w-2 h-2 ${isConnected ? "bg-gis-accent" : "bg-red-500"} relative z-10`} />
+                    {isConnected && (
+                        <div className="absolute inset-0 bg-gis-accent animate-ping opacity-40" />
+                    )}
+                </div>
+                <span className="text-gis-muted uppercase text-[10px] font-bold tracking-[0.2em]">
                     {isConnected ? t('dashboard.live') : t('dashboard.offline')}
                 </span>
-                <span className="ml-auto font-mono text-gis-accent bg-gis-accent/10 px-2 py-0.5 rounded text-sm border border-gis-accent/20">{busCount} {t('dashboard.vehicles')}</span>
+                <span className="ml-auto font-mono text-gis-accent bg-gis-accent/10 px-2 py-0.5 text-[11px] border border-gis-accent/20 shadow-[2px_2px_0px_rgba(226,255,84,0.1)]">{busCount} {t('dashboard.vehicles')}</span>
             </div>
 
             <form onSubmit={handleSearch} className="flex flex-col gap-3">

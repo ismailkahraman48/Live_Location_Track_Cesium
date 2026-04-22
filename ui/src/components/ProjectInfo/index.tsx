@@ -30,32 +30,36 @@ const ProjectInfo: React.FC = () => {
     }
 
     return (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-slate-900/95 border-none md:border border-slate-700 w-full max-w-4xl h-full md:h-[80vh] rounded-none md:rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="bg-gis-surface border border-gis-border w-full max-w-5xl h-full md:h-[85vh] rounded-none shadow-solid overflow-hidden flex flex-col relative">
+                {/* Decorative scanner line */}
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gis-accent/50 animate-pulse z-20"></div>
+
                 {/* Header */}
-                <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <div className="p-6 border-b border-gis-border flex justify-between items-center bg-gis-surface-hover/50">
                     <div>
-                        <h1 className="text-2xl font-bold text-gis-text uppercase tracking-tight">
+                        <h1 className="text-2xl font-bold text-gis-text uppercase tracking-tight flex items-center gap-3">
+                            <span className="w-1.5 h-6 bg-gis-accent"></span>
                             {t('projectInfo.headerTitle')}
                         </h1>
-                        <p className="text-gis-muted font-mono tracking-widest text-[10px] mt-2 uppercase">
+                        <p className="text-gis-muted font-mono tracking-widest text-[10px] mt-2 uppercase flex items-center gap-2">
                             {t('projectInfo.headerSubtitle')}
                         </p>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 hover:bg-white/10 rounded-full transition-colors text-slate-400 hover:text-white"
+                        className="p-2 border border-gis-border hover:bg-gis-accent hover:text-black transition-all group"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 group-hover:rotate-90 transition-transform">
+                            <path strokeLinecap="square" strokeLinejoin="miter" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 {/* Main Content Layout */}
-                <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+                <div className="flex flex-col md:flex-row flex-1 overflow-hidden font-sans">
                     {/* Sidebar / Tabs */}
-                    <div className="w-full md:w-64 bg-slate-950/30 border-b md:border-b-0 md:border-r border-slate-800 p-2 md:p-4 flex flex-row md:flex-col gap-2 overflow-x-auto shrink-0 no-scrollbar">
+                    <div className="w-full md:w-64 bg-gis-surface border-b md:border-b-0 md:border-r border-gis-border p-3 md:p-4 flex flex-row md:flex-col gap-3 overflow-x-auto shrink-0 no-scrollbar">
                         <TabButton
                             active={activeTab === 'overview'}
                             onClick={() => setActiveTab('overview')}
@@ -74,10 +78,11 @@ const ProjectInfo: React.FC = () => {
                             label={t('projectInfo.tabs.features')}
                             icon={<FeaturesIcon />}
                         />
+
                     </div>
 
                     {/* Content Area */}
-                    <div className="flex-1 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+                    <div className="flex-1 p-6 md:p-10 overflow-y-auto custom-scrollbar bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:20px_20px]">
                         {activeTab === 'overview' && <OverviewContent />}
                         {activeTab === 'architecture' && <ArchitectureContent />}
                         {activeTab === 'features' && <FeaturesContent />}

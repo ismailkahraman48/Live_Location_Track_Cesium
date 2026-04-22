@@ -10,7 +10,7 @@
     },
     "overview": {
       "title": "Smart City Vision",
-      "p1": "This project is more than just a tracking system; it lays the foundation for a comprehensive Smart City Digital Twin. In this demonstration, static route data is processed to simulate live vehicle locations with high fidelity, mimicking real-time telemetry. In the future of urban management, cities will be pulsated by millions of sensor data points—from traffic flow and environmental monitoring to energy usage. This infrastructure is engineered to ingest, visualize, and analyze massive scale IoT streams to make the entire city manageable from a single pane of glass.",
+      "p1": "This project goes far beyond a simple vehicle tracking system, offering a comprehensive 'Smart City Digital Twin' infrastructure. In this demonstration, static route geometries are processed by real-time algorithms and simulated as live telemetry movements following physical laws. Next-generation urban management will be shaped by the integration of millions of sensors, from routine traffic flow to air quality, and smart energy grids to crowd optimization. This architecture is specifically designed to visualize massive-scale IoT (Internet of Things) data streams simultaneously, making an entire metropolis manageable from a single interactive 3D interface.",
       "p2": "While currently demonstrating public transport tracking, the architecture is agnostic to the data type. It is ready to scale for emergency response coordination, utility grid monitoring, and autonomous vehicle telemetry, turning raw city data into actionable intelligence.",
       "futureProof": "Future-Proof Infrastructure",
       "stats": {
@@ -59,7 +59,7 @@
       "r2Title": "Historical Playback",
       "r2Desc": "Time-slider interface to replay bus movements from previous days (DVR capability).",
       "r3Title": "City-Wide Data Integration",
-      "r3Desc": "Expansion of the platform to aggregate multi-modal live data streams including Metro, Tram, Ferry lines, ESP (Parking) availability, and municipal IoT sensors for a holistic centralized city dashboard."
+      "r3Desc": "Expansion of the platform to aggregate multi-modal live data streams including Metro, Tram, Ferry lines, Parking availability, and municipal IoT sensors for a holistic centralized city dashboard."
     }
   },
   "dashboard": {

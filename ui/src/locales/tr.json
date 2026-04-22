@@ -10,7 +10,7 @@
     },
     "overview": {
       "title": "Akıllı Şehir Vizyonu",
-      "p1": "Bu proje sadece bir takip sistemi değil; kapsamlı bir Akıllı Şehir Dijital İkizi'nin temelini atmaktadır. Bu demonstrasyonda, statik rota verileri işlenerek canlı araç konumları yüksek sadakatle simüle edilmekte ve gerçek zamanlı telemetri taklit edilmektedir. Şehir yönetiminin geleceğinde, şehirler trafik akışından çevresel izlemeye ve enerji kullanımına kadar milyonlarca sensör verisiyle nabız tutacaktır. Bu altyapı, tüm şehri tek bir ekrandan yönetilebilir kılmak için devasa ölçekli IoT akışlarını almak, görselleştirmek ve analiz etmek üzere tasarlanmıştır.",
+      "p1": "Bu proje basit bir araç takip sisteminin çok ötesine geçerek, kapsamlı bir 'Akıllı Şehir Dijital İkizi' (Digital Twin) altyapısı sunmaktadır. Gördüğünüz demoda, statik rota geometrileri anlık algoritmalarla işlenmekte ve gerçek fizik kurallarına uygun canlı telemetri hareketleri olarak simüle edilmektedir. Yeni nesil şehir yönetimleri; rutin trafik akışından hava kalitesine, akıllı enerji şebekelerinden kalabalık optimizasyonuna kadar milyonlarca sensörün entegrasyonuyla şekillenecektir. Geliştirdiğimiz bu mimari, devasa ölçekteki IoT (Nesnelerin İnterneti) veri akışlarını eşzamanlı olarak görselleştirmek ve koca bir metropolü tek bir interaktif 3D ekrandan yönetilebilir kılmak amacıyla özel olarak tasarlanmıştır.",
       "p2": "Şu anda toplu taşıma takibini gösterse de, mimari veri türünden bağımsızdır. Acil durum müdahale koordinasyonu, şebeke izleme ve otonom araç telemetrisi için ölçeklenmeye hazır olup, ham şehir verilerini eyleme geçirilebilir istihbarata dönüştürür.",
       "futureProof": "Geleceğe Hazır Altyapı",
       "stats": {
@@ -59,7 +59,7 @@
       "r2Title": "Tarihsel Oynatma",
       "r2Desc": "Önceki günlerden otobüs hareketlerini yeniden oynatmak için zaman çizelgesi arayüzü (DVR yeteneği).",
       "r3Title": "Şehir Çapında Veri Entegrasyonu",
-      "r3Desc": "Bütünsel ve merkezi bir şehir panosu için Metro, Tramvay, Vapur hatları, ESP (Otopark) uygunluğu ve belediye IoT sensörleri dahil olmak üzere çok modlu canlı veri akışlarını bir araya getirecek platform genişlemesi."
+      "r3Desc": "Bütünsel ve merkezi bir şehir panosu için Metro, Tramvay, Vapur hatları, Otopark uygunluğu ve belediye IoT sensörleri dahil olmak üzere çok modlu canlı veri akışlarını bir araya getirecek platform genişlemesi."
     }
   },
   "dashboard": {
