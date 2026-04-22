@@ -99,7 +99,7 @@ const BusDashboard = () => {
                     if (entity.polyline) {
                         entity.polyline.material = new PolylineGlowMaterialProperty({
                             glowPower: 0.2,
-                            color: Color.CYAN
+                            color: Color.fromCssColorString('#E2FF54')
                         });
                         entity.polyline.width = new ConstantProperty(6);
                         entity.polyline.clampToGround = new ConstantProperty(true);
@@ -131,7 +131,7 @@ const BusDashboard = () => {
 
 
                                 entity.point = new PointGraphics({
-                                    color: Color.YELLOW,
+                                    color: Color.fromCssColorString('#E2FF54'),
                                     pixelSize: 10,
                                     outlineColor: Color.BLACK,
                                     outlineWidth: 2,
@@ -221,20 +221,21 @@ const BusDashboard = () => {
     };
 
     return (
-        <div className="absolute top-0 left-0 w-full md:w-auto md:top-4 md:left-4 z-10 bg-black/80 backdrop-blur-md p-4 md:rounded-xl border-b md:border border-white/10 text-white md:min-w-[300px]">
-            <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                IETT Live Tracking
+        <div className="absolute top-0 left-0 w-full md:w-auto md:top-6 md:left-6 z-10 bg-gis-surface p-5 md:rounded-none border-l-4 border-gis-accent text-gis-text shadow-solid md:min-w-[340px] outline outline-1 outline-gis-border">
+            <h2 className="text-xl font-bold mb-5 text-gis-text tracking-tight uppercase flex items-center gap-2">
+                <span className="w-2 h-2 bg-gis-accent block"></span>
+                IETT TRACKING
             </h2>
 
-            <div className="flex items-center gap-2 mb-4 text-sm">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-500 shadow-[0_0_10px_#22c55e]" : "bg-red-500"}`} />
-                <span className="text-gray-300">
-                    {isConnected ? "Live" : "Offline"}
+            <div className="flex items-center gap-2 mb-5 text-sm">
+                <div className={`w-2 h-2 ${isConnected ? "bg-gis-accent" : "bg-red-500"}`} />
+                <span className="text-gis-muted uppercase text-xs font-bold tracking-wider">
+                    {isConnected ? "System Live" : "Offline"}
                 </span>
-                <span className="ml-auto font-mono text-cyan-400">{busCount} Buses</span>
+                <span className="ml-auto font-mono text-gis-accent bg-gis-accent/10 px-2 py-0.5 rounded text-sm border border-gis-accent/20">{busCount} VEHICLES</span>
             </div>
 
-            <form onSubmit={handleSearch} className="flex flex-col gap-2">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3">
                 <div className="flex gap-2">
                     <div className="relative flex-1 group">
                         <input
@@ -248,12 +249,12 @@ const BusDashboard = () => {
                                 setFormError(null);
                                 setIsDropdownOpen(true);
                             }}
-                            placeholder="Route Code (e.g. 500T)"
-                            className={`w-full bg-white/5 border ${formError ? 'border-red-500/50' : 'border-white/10'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500 transition-colors`}
+                            placeholder="ENTER ROUTE CODE"
+                            className={`w-full bg-gis-surface-hover border-b-2 ${formError ? 'border-red-500' : 'border-gis-border'} px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-gis-accent transition-colors placeholder:text-gis-muted rounded-none`}
                         />
 
                         {isDropdownOpen && routeCodes.length > 0 && (
-                            <div className="absolute top-full left-0 w-full mt-1 max-h-60 overflow-y-auto bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl z-50 custom-scrollbar">
+                            <div className="absolute top-full left-0 w-full mt-2 max-h-60 overflow-y-auto bg-gis-surface border border-gis-border shadow-solid z-50 custom-scrollbar">
                                 {filteredCodes.length > 0 ? (
                                     filteredCodes.map((code) => (
                                         <button
@@ -263,16 +264,16 @@ const BusDashboard = () => {
                                                 e.preventDefault(); // Prevents blur before click
                                                 handleSelectRoute(code);
                                             }}
-                                            className="w-full text-left px-3 py-2 hover:bg-white/10 text-sm text-gray-300 hover:text-white transition-colors border-b border-white/5 last:border-0 flex items-center justify-between group-item"
+                                            className="w-full text-left px-3 py-2 hover:bg-gis-surface-hover hover:text-gis-accent text-sm text-gis-muted font-mono transition-colors border-b border-gis-border last:border-0 flex items-center justify-between group-item"
                                         >
-                                            <span className="font-mono">{code}</span>
-                                            <svg className="w-3 h-3 opacity-0 group-item-hover:opacity-100 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <span>{code}</span>
+                                            <svg className="w-3 h-3 opacity-0 group-item-hover:opacity-100 text-gis-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                             </svg>
                                         </button>
                                     ))
                                 ) : (
-                                    <div className="px-3 py-2 text-xs text-gray-500 text-center">No routes found</div>
+                                    <div className="px-3 py-2 text-xs text-gis-muted text-center font-mono uppercase tracking-wider">NO ROUTES FOUND</div>
                                 )}
                             </div>
                         )}
@@ -281,7 +282,7 @@ const BusDashboard = () => {
                             <button
                                 type="button"
                                 onClick={handleClear}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gis-muted hover:text-gis-text text-xs"
                             >
                                 ✕
                             </button>
@@ -290,19 +291,19 @@ const BusDashboard = () => {
                     <button
                         disabled={isLoadingCodes}
                         type="submit"
-                        className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                        className="bg-gis-accent hover:bg-gis-accent-hover text-black px-4 py-2.5 text-sm font-bold tracking-widest uppercase transition-colors"
                     >
                         Search
                     </button>
                 </div>
                 {formError && (
-                    <div className="text-xs text-red-400 pl-1">{formError}</div>
+                    <div className="text-xs text-red-500 pl-1 font-mono uppercase">{formError}</div>
                 )}
             </form>
 
             {routeFilter && (
-                <div className="mt-2 text-xs text-center text-gray-400">
-                    Currently tracking only route <span className="text-yellow-400 font-bold">{routeFilter}</span>.
+                <div className="mt-4 text-xs font-mono text-center text-gis-muted bg-gis-surface-hover py-2 border border-gis-border">
+                    ACTIVE FILTER: <span className="text-gis-accent font-bold pl-1">{routeFilter}</span>
                 </div>
             )}
         </div>
