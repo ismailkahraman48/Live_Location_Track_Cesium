@@ -22,9 +22,15 @@ import {
     ConstantPositionProperty,
 } from "cesium";
 import { getApiUrl } from "../utils/getApiUrl";
+import { useTranslation } from 'react-i18next';
 
 const BusDashboard = () => {
+    const { t, i18n } = useTranslation();
     const { busCount, isConnected, routeFilter, setRouteFilter } = useBusData();
+
+    const toggleLang = () => {
+        i18n.changeLanguage(i18n.language === 'en' ? 'tr' : 'en');
+    };
     const [inputVal, setInputVal] = useState(routeFilter);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [routeCodes, setRouteCodes] = useState<string[]>([]);
@@ -222,17 +228,28 @@ const BusDashboard = () => {
 
     return (
         <div className="absolute top-0 left-0 w-full md:w-auto md:top-6 md:left-6 z-10 bg-gis-surface p-5 md:rounded-none border-l-4 border-gis-accent text-gis-text shadow-solid md:min-w-[340px] outline outline-1 outline-gis-border">
-            <h2 className="text-xl font-bold mb-5 text-gis-text tracking-tight uppercase flex items-center gap-2">
-                <span className="w-2 h-2 bg-gis-accent block"></span>
-                IETT TRACKING
-            </h2>
+            <div className="flex items-center justify-between mb-5">
+                <h2 className="text-xl font-bold text-gis-text tracking-tight uppercase flex items-center gap-2">
+                    <span className="w-2 h-2 bg-gis-accent block"></span>
+                    {t('dashboard.title')}
+                </h2>
+                <button 
+                  onClick={toggleLang}
+                  className="bg-gis-surface-hover border border-gis-border text-gis-accent px-2 py-1 hover:bg-gis-border transition-colors font-mono font-bold uppercase tracking-widest text-[10px] flex items-center gap-1"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                    <path strokeLinecap="square" strokeLinejoin="miter" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                  </svg>
+                  {i18n.language.toUpperCase()}
+                </button>
+            </div>
 
             <div className="flex items-center gap-2 mb-5 text-sm">
                 <div className={`w-2 h-2 ${isConnected ? "bg-gis-accent" : "bg-red-500"}`} />
                 <span className="text-gis-muted uppercase text-xs font-bold tracking-wider">
-                    {isConnected ? "System Live" : "Offline"}
+                    {isConnected ? t('dashboard.live') : t('dashboard.offline')}
                 </span>
-                <span className="ml-auto font-mono text-gis-accent bg-gis-accent/10 px-2 py-0.5 rounded text-sm border border-gis-accent/20">{busCount} VEHICLES</span>
+                <span className="ml-auto font-mono text-gis-accent bg-gis-accent/10 px-2 py-0.5 rounded text-sm border border-gis-accent/20">{busCount} {t('dashboard.vehicles')}</span>
             </div>
 
             <form onSubmit={handleSearch} className="flex flex-col gap-3">
@@ -249,7 +266,7 @@ const BusDashboard = () => {
                                 setFormError(null);
                                 setIsDropdownOpen(true);
                             }}
-                            placeholder="ENTER ROUTE CODE"
+                            placeholder={t('dashboard.placeholder')}
                             className={`w-full bg-gis-surface-hover border-b-2 ${formError ? 'border-red-500' : 'border-gis-border'} px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-gis-accent transition-colors placeholder:text-gis-muted rounded-none`}
                         />
 
@@ -273,7 +290,7 @@ const BusDashboard = () => {
                                         </button>
                                     ))
                                 ) : (
-                                    <div className="px-3 py-2 text-xs text-gis-muted text-center font-mono uppercase tracking-wider">NO ROUTES FOUND</div>
+                                    <div className="px-3 py-2 text-xs text-gis-muted text-center font-mono uppercase tracking-wider">{t('dashboard.noRoutes')}</div>
                                 )}
                             </div>
                         )}
@@ -293,7 +310,7 @@ const BusDashboard = () => {
                         type="submit"
                         className="bg-gis-accent hover:bg-gis-accent-hover text-black px-4 py-2.5 text-sm font-bold tracking-widest uppercase transition-colors"
                     >
-                        Search
+                        {t('dashboard.search')}
                     </button>
                 </div>
                 {formError && (
@@ -303,7 +320,7 @@ const BusDashboard = () => {
 
             {routeFilter && (
                 <div className="mt-4 text-xs font-mono text-center text-gis-muted bg-gis-surface-hover py-2 border border-gis-border">
-                    ACTIVE FILTER: <span className="text-gis-accent font-bold pl-1">{routeFilter}</span>
+                    {t('dashboard.activeFilter')} <span className="text-gis-accent font-bold pl-1">{routeFilter}</span>
                 </div>
             )}
         </div>

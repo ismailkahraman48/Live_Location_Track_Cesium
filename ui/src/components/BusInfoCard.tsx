@@ -1,5 +1,6 @@
 import React from 'react';
 import { useBusData } from "../context/BusData";
+import { useTranslation } from 'react-i18next';
 
 interface BusInfoCardProps {
     bus: any;
@@ -7,6 +8,7 @@ interface BusInfoCardProps {
 }
 
 const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) => {
+    const { t } = useTranslation();
     const { buses } = useBusData();
 
     const bus = buses.find(b => b.id === initialBus?.id) || initialBus;
@@ -45,17 +47,17 @@ const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) =
             <div className="px-5 pb-6 pt-5 space-y-5">
                 <div className="grid grid-cols-2 gap-3 text-sm">
                     <div className="bg-gis-surface-hover p-3 border-l-2 border-gis-border">
-                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">VEHICLE ID</span>
+                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">{t('busCard.vehicleId')}</span>
                         <span className="font-bold text-gis-text font-mono text-lg">{bus.id}</span>
                     </div>
                     <div className="bg-gis-surface-hover p-3 border-l-2 border-gis-border">
-                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">SPEED</span>
-                        <span className="font-bold text-gis-text font-mono text-lg">{bus.speed} <span className="text-xs font-normal text-gis-muted">km/h</span></span>
+                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">{t('busCard.speed')}</span>
+                        <span className="font-bold text-gis-text font-mono text-lg">{bus.speed} <span className="text-xs font-normal text-gis-muted">{t('busCard.kmh')}</span></span>
                     </div>
                 </div>
 
                 <div className="border border-gis-border p-3 bg-gis-surface-hover/50">
-                    <span className="text-gis-muted text-[10px] font-mono uppercase tracking-widest mb-2 block">NEXT STOP</span>
+                    <span className="text-gis-muted text-[10px] font-mono uppercase tracking-widest mb-2 block">{t('busCard.nextStop')}</span>
                     <div className="flex items-center gap-3 text-gis-text font-bold">
                         <div className="w-2 h-2 bg-gis-accent"></div>
                         <span className="truncate">{bus.nextStop}</span>
@@ -64,7 +66,7 @@ const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) =
 
                 <div className="space-y-2 pt-2">
                     <div className="flex justify-between text-[10px] font-mono font-bold text-gis-muted uppercase tracking-widest">
-                        <span>ROUTE PROGRESS</span>
+                        <span>{t('busCard.progress')}</span>
                         <span className="text-gis-text">{displayPercentage}%</span>
                     </div>
                     <div className="h-1.5 w-full bg-gis-surface-hover border border-gis-border overflow-hidden">

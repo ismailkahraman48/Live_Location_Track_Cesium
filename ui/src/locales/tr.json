@@ -1,0 +1,85 @@
+{
+  "projectInfo": {
+    "title": "Proje Detayları",
+    "headerTitle": "İstanbul Canlı Otobüs Takip Sistemi",
+    "headerSubtitle": "CesiumJS & FastAPI destekli yüksek performanslı 3D görselleştirme",
+    "tabs": {
+      "overview": "Genel Bakış",
+      "architecture": "Teknik Mimari",
+      "features": "Tasarım ve Özellikler"
+    },
+    "overview": {
+      "title": "Akıllı Şehir Vizyonu",
+      "p1": "Bu proje sadece bir takip sistemi değil; kapsamlı bir Akıllı Şehir Dijital İkizi'nin temelini atmaktadır. Bu demonstrasyonda, statik rota verileri işlenerek canlı araç konumları yüksek sadakatle simüle edilmekte ve gerçek zamanlı telemetri taklit edilmektedir. Şehir yönetiminin geleceğinde, şehirler trafik akışından çevresel izlemeye ve enerji kullanımına kadar milyonlarca sensör verisiyle nabız tutacaktır. Bu altyapı, tüm şehri tek bir ekrandan yönetilebilir kılmak için devasa ölçekli IoT akışlarını almak, görselleştirmek ve analiz etmek üzere tasarlanmıştır.",
+      "p2": "Şu anda toplu taşıma takibini gösterse de, mimari veri türünden bağımsızdır. Acil durum müdahale koordinasyonu, şebeke izleme ve otonom araç telemetrisi için ölçeklenmeye hazır olup, ham şehir verilerini eyleme geçirilebilir istihbarata dönüştürür.",
+      "futureProof": "Geleceğe Hazır Altyapı",
+      "stats": {
+        "coreEngine": "Çekirdek Motor",
+        "cesium": "CesiumJS 3D",
+        "realTime": "Gerçek Zamanlı",
+        "websocket": "WebSocket / MQTT",
+        "dataSource": "Veri Kaynağı",
+        "iot": "IoT Sensör Füzyonu",
+        "backend": "Arka Uç",
+        "fastapi": "Python FastAPI"
+      }
+    },
+    "architecture": {
+      "title": "Sistem Mimarisi Katmanları",
+      "badge": "Katmanlı Mimari",
+      "desc": "Sistem; veri alımı, simülasyon fiziği ve istemci tarafı görselleştirmeyi ayıran bağımsız katmanlar ardışık düzeni olarak tasarlanmıştır. Bu, ölçeklenebilirlik sağlar ve bir katmanı diğerlerini etkilemeden değiştirmeye (örneğin simülatörü canlı bir MQTT akışıyla değiştirmeye) olanak tanır.",
+      "flowTitle": "Uçtan Uca Veri Akışı",
+      "l1Title": "L1: Alım ve Normalizasyon",
+      "l1Desc": "WKT 'LINESTRING' geometrilerini çıkararak İETT'den gelen özel JSON uç noktalarını ayrıştırır. Bu standart dışı dizeleri simülatör için temiz, kullanılabilir koordinat dizilerine dönüştürür.",
+      "l2Title": "L2: Simülasyon Motoru",
+      "l2Desc": "Arka ucun 'Beyni'. Her otobüsün durumunu korur. Basit oynatmanın aksine, ivmelenmeyi ve duraklardaki bekleme sürelerini ele alarak fizik tabanlı hareket hesaplar.",
+      "l3Title": "L3: Gerçek Zamanlı Dağıtım",
+      "l3Desc": "Durum anlık görüntülerini yayınlayan asenkron bir WebSocket ağ geçidi. HTTP yoklamasının (polling) gecikmesini ve ek yükünü ortadan kaldırmak için bir 'Push' mimarisi kullanır.",
+      "l5Title": "L5: İstemci Görselleştirmesi",
+      "l5Desc": "Sunum katmanı. Ayrık konum güncellemelerini alır ve 3D küre üzerinde pürüzsüz, sürekli hareket interpolasyonu yapmak için spline eğrileri kullanır.",
+      "payloadTitle": "Veri Yükü Yapısı (Katman 3 → Katman 4)",
+      "liveStatus": "Canlı Sistem Durumu",
+      "disconnect": "L3 Bağlantısını Kes",
+      "reconnect": "L3 Yeniden Bağlan"
+    },
+    "features": {
+      "f1Title": "İnteraktif Kontrol Paneli",
+      "f1Desc": "Sol üstte yer alan Otobüs Paneli, kullanıcıların belirli rotaları (örn. '10B') seçmesini sağlar. Filtreleme anında ilgili otobüsleri ve durakları izole ederek haritadaki gürültüyü ortadan kaldırır.",
+      "f2Title": "Varlık Seçimi ve Takibi",
+      "f2Desc": "Herhangi bir otobüs 3D modeline tıklandığında, canlı telemetri (Hız, Rota, Koordinatlar) gösteren detaylı bir Bilgi Kartı açılır. Kamera otomatik olarak seçilen otobüse kilitlenir ve onu pürüzsüzce takip eder.",
+      "f3Title": "Akıllı İnterpolasyon",
+      "f3Desc": "Otobüslerden gelen ayrık GPS güncellemeleri Cesium'un `SampledPositionProperty` özelliği kullanılarak akıcı bir harekete dönüştürülür. Bu, 'ışınlanmayı' önler ve harita boyunca akıcı animasyon sağlar.",
+      "f4Title": "3D Model ve Sabitleme",
+      "f4Desc": "Her otobüs özel GLTF modellerle temsil edilir ve `HeightReference.CLAMP_TO_GROUND` kullanılarak izlenen araziye hassas bir şekilde sabitlenir.",
+      "f5Title": "WebSocket Yayını",
+      "f5Desc": "Periyodik HTTP istekleri yerine verileri 'itmek (push)' için her zaman açık bir WebSocket tüneli kullanılır. Bu, sunucu yükünü azaltır ve gerçek zamanlı yanıt verebilirliği önemli ölçüde artırır.",
+      "roadmap": "Gelecek Yol Haritası",
+      "r1Title": "Yapay Zeka Trafik Tahmini",
+      "r1Desc": "Geçmiş hız segmentlerine dayanarak tahmini varış süresi (ETA) gecikmelerini hesaplayan makine öğrenimi modelleri.",
+      "r2Title": "Tarihsel Oynatma",
+      "r2Desc": "Önceki günlerden otobüs hareketlerini yeniden oynatmak için zaman çizelgesi arayüzü (DVR yeteneği).",
+      "r3Title": "Şehir Çapında Veri Entegrasyonu",
+      "r3Desc": "Bütünsel ve merkezi bir şehir panosu için Metro, Tramvay, Vapur hatları, ESP (Otopark) uygunluğu ve belediye IoT sensörleri dahil olmak üzere çok modlu canlı veri akışlarını bir araya getirecek platform genişlemesi."
+    }
+  },
+  "dashboard": {
+    "title": "İETT TAKİP",
+    "live": "Sistem Canlı",
+    "offline": "Çevrimdışı",
+    "vehicles": "ARAÇ",
+    "placeholder": "ROTA KODU GİRİN",
+    "noRoutes": "ROTA BULUNAMADI",
+    "search": "ARA",
+    "activeFilter": "AKTİF FİLTRE:"
+  },
+  "busCard": {
+    "vehicleId": "ARAÇ KİMLİĞİ",
+    "speed": "HIZ",
+    "kmh": "km/s",
+    "nextStop": "SONRAKİ DURAK",
+    "progress": "ROTA İLERLEMESİ"
+  },
+  "locator": {
+    "find": "KONUMUMU BUL"
+  }
+}

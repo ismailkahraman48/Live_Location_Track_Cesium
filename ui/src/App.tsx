@@ -1,4 +1,3 @@
-
 import CesiumViewer from './components/CesiumViewer';
 import BusDashboard from './components/BusDashboard';
 import { BusDataProvider } from './context/BusData';
@@ -6,6 +5,7 @@ import { BusDataProvider } from './context/BusData';
 import './index.css';
 import { CesiumProvider } from './context/Cesium';
 import ProjectInfo from './components/ProjectInfo';
+import { useTranslation } from 'react-i18next';
 
 function App() {
   return (

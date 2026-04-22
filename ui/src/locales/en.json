@@ -1,0 +1,85 @@
+{
+  "projectInfo": {
+    "title": "Project Details",
+    "headerTitle": "Istanbul Live Bus Tracking System",
+    "headerSubtitle": "High-performance 3D visualization powered by CesiumJS & FastAPI",
+    "tabs": {
+      "overview": "Overview",
+      "architecture": "Technical Architecture",
+      "features": "Design & Features"
+    },
+    "overview": {
+      "title": "Smart City Vision",
+      "p1": "This project is more than just a tracking system; it lays the foundation for a comprehensive Smart City Digital Twin. In this demonstration, static route data is processed to simulate live vehicle locations with high fidelity, mimicking real-time telemetry. In the future of urban management, cities will be pulsated by millions of sensor data points—from traffic flow and environmental monitoring to energy usage. This infrastructure is engineered to ingest, visualize, and analyze massive scale IoT streams to make the entire city manageable from a single pane of glass.",
+      "p2": "While currently demonstrating public transport tracking, the architecture is agnostic to the data type. It is ready to scale for emergency response coordination, utility grid monitoring, and autonomous vehicle telemetry, turning raw city data into actionable intelligence.",
+      "futureProof": "Future-Proof Infrastructure",
+      "stats": {
+        "coreEngine": "Core Engine",
+        "cesium": "CesiumJS 3D",
+        "realTime": "Real-Time Proto",
+        "websocket": "WebSocket / MQTT",
+        "dataSource": "Data Source",
+        "iot": "IoT Sensor Fusion",
+        "backend": "Backend",
+        "fastapi": "Python FastAPI"
+      }
+    },
+    "architecture": {
+      "title": "System Architecture Layers",
+      "badge": "Layered Architecture",
+      "desc": "The system is designed as a pipeline of independent layers, separating data ingestion, simulation physics, and client-side visualization. This ensures scalability and allows substituting components (e.g., swapping the simulator for a live MQTT stream) without affecting other layers.",
+      "flowTitle": "End-to-End Data Flow",
+      "l1Title": "L1: Ingestion & Normalization",
+      "l1Desc": "Parses custom JSON endpoints from IETT by extracting WKT 'LINESTRING' geometries. It converts these non-standard strings into clean, usable coordinate arrays for the simulator.",
+      "l2Title": "L2: Simulation Engine",
+      "l2Desc": "The 'Brain' of the backend. It maintains the state of every bus. Unlike simple playback, it calculates physics-based movement, handling acceleration and dwell times at stops.",
+      "l3Title": "L3: Real-Time Distribution",
+      "l3Desc": "An asynchronous WebSocket gateway that broadcasts state snapshots. It uses a 'Push' architecture to eliminate the latency and overhead of HTTP polling.",
+      "l5Title": "L5: Client Visualization",
+      "l5Desc": "The presentation layer. It takes discrete position updates and uses splines to interpolate smooth, continuous movement on the 3D globe.",
+      "payloadTitle": "Data Payload Structure (Layer 3 → Layer 4)",
+      "liveStatus": "Live System Status",
+      "disconnect": "Disconnect L3",
+      "reconnect": "Reconnect L3"
+    },
+    "features": {
+      "f1Title": "Interactive Dashboard",
+      "f1Desc": "Located at the top-left, the Bus Dashboard allows users to select specific bus routes (e.g., '10B'). Filtering instantly isolates the relevant buses and stops, removing noise from the map.",
+      "f2Title": "Entity Selection & Tracking",
+      "f2Desc": "Clicking on any bus 3D model opens a detailed Info Card showing live telemetry (Speed, Route, Coordinates). The camera automatically locks onto the selected bus, following it smoothly.",
+      "f3Title": "Smart Interpolation",
+      "f3Desc": "Discrete GPS updates from buses are converted into smooth movement using Cesium's `SampledPositionProperty`. This prevents 'teleporting' and ensures fluid animation across the map.",
+      "f4Title": "3D Model & Clamping",
+      "f4Desc": "Each bus is represented by custom GLTF models and clamped precisely to the tracked terrain using `HeightReference.CLAMP_TO_GROUND`.",
+      "f5Title": "WebSocket Stream",
+      "f5Desc": "Instead of periodic polling (HTTP), an always-open WebSocket tunnel is used to 'Push' data. This reduces server load and significantly improves real-time responsiveness.",
+      "roadmap": "Future Roadmap",
+      "r1Title": "AI Traffic Prediction",
+      "r1Desc": "Machine learning models to estimate ETA delays based on historical speed segments.",
+      "r2Title": "Historical Playback",
+      "r2Desc": "Time-slider interface to replay bus movements from previous days (DVR capability).",
+      "r3Title": "City-Wide Data Integration",
+      "r3Desc": "Expansion of the platform to aggregate multi-modal live data streams including Metro, Tram, Ferry lines, ESP (Parking) availability, and municipal IoT sensors for a holistic centralized city dashboard."
+    }
+  },
+  "dashboard": {
+    "title": "IETT TRACKING",
+    "live": "System Live",
+    "offline": "Offline",
+    "vehicles": "VEHICLES",
+    "placeholder": "ENTER ROUTE CODE",
+    "noRoutes": "NO ROUTES FOUND",
+    "search": "SEARCH",
+    "activeFilter": "ACTIVE FILTER:"
+  },
+  "busCard": {
+    "vehicleId": "VEHICLE ID",
+    "speed": "SPEED",
+    "kmh": "km/h",
+    "nextStop": "NEXT STOP",
+    "progress": "ROUTE PROGRESS"
+  },
+  "locator": {
+    "find": "LOCATE ME"
+  }
+}
