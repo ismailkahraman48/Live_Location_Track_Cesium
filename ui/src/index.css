@@ -1,5 +1,20 @@
 @import "tailwindcss";
 @import 'cesium/Build/Cesium/Widgets/widgets.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+@theme {
+  --color-gis-surface: #1C1C1A;
+  --color-gis-surface-hover: #292926;
+  --color-gis-border: #3A3A36;
+  --color-gis-accent: #E2FF54;
+  --color-gis-accent-hover: #CBE64B;
+  --color-gis-text: #F5F5F0;
+  --color-gis-muted: #A3A39A;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  --shadow-solid: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
 
 html,
 body,
@@ -9,6 +24,9 @@ body,
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: #0A0A0A;
+  color: var(--color-gis-text);
+  font-family: var(--font-sans);
 }
 
 @keyframes shimmer {

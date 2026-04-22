@@ -1,13 +1,11 @@
 import { Cartesian3, Color, HeightReference } from "cesium";
 import { useCesium } from "../context/Cesium";
-
-
-
-
+import { useTranslation } from 'react-i18next';
 
 const ClientLocator = () => {
 
     const { viewer } = useCesium();
+    const { t } = useTranslation();
 
     const handleShowUserLocation = () => {
         if (!viewer) return;
@@ -27,7 +25,7 @@ const ClientLocator = () => {
                             heightReference: HeightReference.RELATIVE_TO_TERRAIN
                         },
                         label: {
-                            text: "Siz Buradasınız",
+                            text: "Siz Buradasınız", // We can keep this or translate it later
                             font: "14px sans-serif",
                             style: 1, // FILL_AND_OUTLINE
                             fillColor: Color.WHITE,
@@ -62,15 +60,16 @@ const ClientLocator = () => {
     return (
         <button
             onClick={handleShowUserLocation}
-            className="absolute top-4 right-4 bg-white text-gray-800 p-2 rounded shadow-lg hover:bg-gray-100 transition-colors z-10 flex items-center gap-2 font-medium"
+            className="absolute bottom-6 right-6 bg-gis-surface border border-gis-border text-gis-text px-4 py-3 shadow-solid hover:bg-gis-surface-hover hover:border-gis-accent transition-colors z-10 flex items-center gap-3 font-mono font-bold uppercase tracking-widest text-xs"
         >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-blue-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gis-accent">
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="square" strokeLinejoin="miter" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
             </svg>
-            Konumumu Bul
+            {t('locator.find')}
         </button>
     )
 }
+
 
 export default ClientLocator;

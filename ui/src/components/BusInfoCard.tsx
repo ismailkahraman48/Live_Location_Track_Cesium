@@ -1,5 +1,6 @@
 import React from 'react';
 import { useBusData } from "../context/BusData";
+import { useTranslation } from 'react-i18next';
 
 interface BusInfoCardProps {
     bus: any;
@@ -7,6 +8,7 @@ interface BusInfoCardProps {
 }
 
 const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) => {
+    const { t } = useTranslation();
     const { buses } = useBusData();
 
     const bus = buses.find(b => b.id === initialBus?.id) || initialBus;
@@ -18,73 +20,63 @@ const BusInfoCard: React.FC<BusInfoCardProps> = ({ bus: initialBus, onClose }) =
     const displayPercentage = Math.round(progressValue);
 
     return (
-        <div className="absolute top-4 right-4 w-80 bg-white/90 backdrop-blur-md rounded-xl shadow-2xl overflow-hidden z-50 animate-in slide-in-from-right duration-300 border border-white/50">
-
-            <div className="p-4 relative overflow-hidden">
-                <div
-                    className="absolute inset-0 opacity-10"
-                    style={{ backgroundColor: bus.color || '#3b82f6' }}
-                />
+        <div className="absolute top-6 right-6 w-80 bg-gis-surface border border-gis-border shadow-solid overflow-hidden z-50 animate-in slide-in-from-right duration-300">
+            <div className="p-5 border-b border-gis-border relative overflow-hidden">
                 <div className="flex justify-between items-start relative z-10">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        <h2 className="text-3xl font-bold text-gis-text flex items-center gap-3 tracking-tight">
                             <span
-                                className="inline-block w-3 h-8 rounded-full"
-                                style={{ backgroundColor: bus.color || '#3b82f6' }}
+                                className="inline-block w-2 h-8"
+                                style={{ backgroundColor: bus.color || 'var(--color-gis-accent)' }}
                             ></span>
                             {bus.routeCode}
                         </h2>
-                        <p className="text-sm text-gray-500 font-medium ml-5">{bus.routeName}</p>
+                        <p className="text-xs text-gis-muted font-mono uppercase tracking-widest mt-2 ml-5">{bus.routeName}</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-1 hover:bg-black/5 rounded-full transition-colors"
+                        className="p-2 hover:bg-gis-surface-hover text-gis-muted hover:text-gis-text transition-colors border border-transparent hover:border-gis-border"
                     >
-                        <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <div className="px-5 pb-5 pt-2 space-y-4">
-
+            <div className="px-5 pb-6 pt-5 space-y-5">
                 <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="bg-gray-50 p-2 rounded-lg">
-                        <span className="text-gray-400 block text-xs uppercase tracking-wider">Bus ID</span>
-                        <span className="font-semibold text-gray-700">{bus.id}</span>
+                    <div className="bg-gis-surface-hover p-3 border-l-2 border-gis-border">
+                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">{t('busCard.vehicleId')}</span>
+                        <span className="font-bold text-gis-text font-mono text-lg">{bus.id}</span>
                     </div>
-                    <div className="bg-gray-50 p-2 rounded-lg">
-                        <span className="text-gray-400 block text-xs uppercase tracking-wider">Speed</span>
-                        <span className="font-semibold text-gray-700">{bus.speed} km/h</span>
-                    </div>
-                </div>
-
-                <div>
-                    <span className="text-gray-400 text-xs uppercase tracking-wider mb-1 block">Next Stop</span>
-                    <div className="flex items-center gap-2 text-gray-700 font-medium">
-                        <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {bus.nextStop}
+                    <div className="bg-gis-surface-hover p-3 border-l-2 border-gis-border">
+                        <span className="text-gis-muted block text-[10px] uppercase tracking-widest font-mono mb-1">{t('busCard.speed')}</span>
+                        <span className="font-bold text-gis-text font-mono text-lg">{bus.speed} <span className="text-xs font-normal text-gis-muted">{t('busCard.kmh')}</span></span>
                     </div>
                 </div>
 
-                <div className="space-y-1">
-                    <div className="flex justify-between text-xs font-medium text-gray-500">
-                        <span>Route Progress</span>
-                        <span>{displayPercentage}%</span>
+                <div className="border border-gis-border p-3 bg-gis-surface-hover/50">
+                    <span className="text-gis-muted text-[10px] font-mono uppercase tracking-widest mb-2 block">{t('busCard.nextStop')}</span>
+                    <div className="flex items-center gap-3 text-gis-text font-bold">
+                        <div className="w-2 h-2 bg-gis-accent"></div>
+                        <span className="truncate">{bus.nextStop}</span>
                     </div>
-                    <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                </div>
+
+                <div className="space-y-2 pt-2">
+                    <div className="flex justify-between text-[10px] font-mono font-bold text-gis-muted uppercase tracking-widest">
+                        <span>{t('busCard.progress')}</span>
+                        <span className="text-gis-text">{displayPercentage}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-gis-surface-hover border border-gis-border overflow-hidden">
                         <div
-                            className="h-full rounded-full transition-all duration-500 ease-out relative overflow-hidden"
+                            className="h-full transition-all duration-500 ease-out"
                             style={{
                                 width: `${progressValue}%`,
-                                backgroundColor: bus.color || '#3b82f6'
+                                backgroundColor: bus.color || 'var(--color-gis-accent)'
                             }}
                         >
-                            <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite] w-full transform -skew-x-12 translate-x-[-100%]" style={{ content: '""' }}></div>
                         </div>
                     </div>
                 </div>
