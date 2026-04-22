@@ -29,6 +29,12 @@ body,
   font-family: var(--font-sans);
 }
 
-/* .cesium-viewer-bottom {
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.cesium-viewer-bottom {
   display: none !important;
-} */
+}
