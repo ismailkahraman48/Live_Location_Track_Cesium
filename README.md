@@ -1,6 +1,5 @@
 # Istanbul Smart City - Digital Twin Project 🏙️
 
-Hi there! This is my capstone project developed for the **Cesium Certified Developer** certification.
 
 In this project, my goal was not just to simply show bus locations on a map, but to create a **Digital Twin** prototype that aligns with the future "Smart City" vision. I wanted to demonstrate how powerful it can be to verify and visualize real-time data in a 3D environment for managing massive metropolises like Istanbul.
 
